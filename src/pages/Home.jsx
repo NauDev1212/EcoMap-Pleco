@@ -10,7 +10,7 @@ export default function Home() {
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   // ─── STATE POPUP PANDUAN UTAMA (MENGGUNAKAN LOCALSTORAGE) ───
-  const [showGuide, setShowGuide] = useState(True);
+  const [showGuide, setShowGuide] = useState(true);
   // => {
   // return !localStorage.getItem("hasSeenEcomapGuide");
   };
@@ -27,7 +27,7 @@ export default function Home() {
 
   // Fungsi untuk menutup panduan dan menandainya agar tidak muncul lagi saat refresh
   const handleCloseGuide = () => {
-    localStorage.setItem("hasSeenEcomapGuide", "true");
+  // localStorage.setItem("hasSeenEcomapGuide", "true");
     setShowGuide(false);
   };
 
