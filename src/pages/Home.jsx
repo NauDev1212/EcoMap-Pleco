@@ -10,9 +10,10 @@ export default function Home() {
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   // ─── STATE POPUP PANDUAN UTAMA (MENGGUNAKAN LOCALSTORAGE) ───
-  const [showGuide, setShowGuide] = useState(() => {
-    return !localStorage.getItem("hasSeenEcomapGuide");
-  });
+  const [showGuide, setShowGuide] = useState(True);
+  // => {
+  // return !localStorage.getItem("hasSeenEcomapGuide");
+  };
 
   useEffect(() => {
     const savedUser = localStorage.getItem("ecoMapUser");
