@@ -2,20 +2,22 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogIn, MapPin, BookOpen, AlertCircle, Award, HelpCircle, X, ShieldAlert } from "lucide-react";
 
-// Pastikan file gambar ini ada di folder src/asset/ kamu
+// Pastikan lokasi file gambar ini sesuai di folder projekmu
 import sungaiImg from "../asset/sungai sapu-sapu.jpg";
 
 export default function Home() {
   const navigate = useNavigate();
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  // ─── STATE POPUP PANDUAN UTAMA (MENGGUNAKAN LOCALSTORAGE) ───
+  // ─── POPUP PANDUAN UTAMA ───
+  // Selalu bernilai true saat komponen di-mount / halaman di-refresh
   const [showGuide, setShowGuide] = useState(true);
-  // => {
-  // return !localStorage.getItem("hasSeenEcomapGuide");
-  };
+
+  // State pendukung fallback gambar
+  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
+    // Memeriksa autentikasi user
     const savedUser = localStorage.getItem("ecoMapUser");
     if (!savedUser) {
       const timer = setTimeout(() => {
@@ -25,18 +27,15 @@ export default function Home() {
     }
   }, []);
 
-  // Fungsi untuk menutup panduan dan menandainya agar tidak muncul lagi saat refresh
+  // Fungsi untuk menutup panduan hanya pada sesi tampilan saat ini
   const handleCloseGuide = () => {
-  // localStorage.setItem("hasSeenEcomapGuide", "true");
     setShowGuide(false);
   };
 
   return (
     <div className="w-full min-h-screen bg-[#FDF1CE]/20 font-sans pb-12 relative">
       
-      {/* ========================================================== */}
-      {/* 🟢 POPUP MODAL PANDUAN PENGGUNAAN WEBSITE 🟢 */}
-      {/* ========================================================== */}
+      {/* POPUP MODAL PANDUAN PENGGUNAAN WEBSITE */}
       {showGuide && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 transition-all duration-300">
           <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl border border-neutral-200 overflow-hidden transform animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
@@ -50,6 +49,7 @@ export default function Home() {
               <button 
                 onClick={handleCloseGuide}
                 className="p-1.5 hover:bg-neutral-100 rounded-full text-neutral-400 hover:text-neutral-700 transition-colors"
+                aria-label="Tutup Panduan"
               >
                 <X size={20} />
               </button>
@@ -58,28 +58,36 @@ export default function Home() {
             {/* Konten Utama Popup */}
             <div className="p-6 overflow-y-auto space-y-5 flex-1 custom-scrollbar">
               
-              {/* Area Gambar Poster / Ilustrasi Website */}
-              <div className="w-full h-52 bg-zinc-100 rounded-2xl overflow-hidden border border-neutral-200 shadow-inner flex items-center justify-center relative group">
-                {/* Kamu bisa menggunakan gambar dari folder src/asset atau folder public */}
-                <img 
-                  src={sungaiImg} 
-                  alt="Poster Panduan Website" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'flex';
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-br from-[#1E4D2B]/90 to-[#008000]/70 p-6 flex-col justify-end text-white text-left space-y-1 flex">
-                  <span className="text-[10px] font-bold tracking-wider uppercase bg-white/20 px-2 py-0.5 rounded w-fit">Panduan Awal</span>
-                  <h3 className="text-lg font-black leading-tight">Sinergi Komunitas Memantau Sungai Jakarta</h3>
-                  <p className="text-[11px] text-neutral-200">Pantau kualitas air dan laporkan invasi ikan sapu-sapu demi kelestarian ekosistem lokal.</p>
+              {/* Area Gambar Poster */}
+              <div className="w-full h-52 bg-zinc-800 rounded-2xl overflow-hidden border border-neutral-200 shadow-inner relative group">
+                {!imgError && (
+                  <img 
+                    src={sungaiImg} 
+                    alt="Poster Panduan Website" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={() => setImgError(true)}
+                  />
+                )}
+
+                {/* Overlay Informasi Gambar */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#1E4D2B]/90 to-[#008000]/70 p-6 flex flex-col justify-end text-white text-left space-y-1">
+                  <span className="text-[10px] font-bold tracking-wider uppercase bg-white/20 px-2 py-0.5 rounded w-fit">
+                    Panduan Awal
+                  </span>
+                  <h3 className="text-lg font-black leading-tight">
+                    Sinergi Komunitas Memantau Sungai Jakarta
+                  </h3>
+                  <p className="text-[11px] text-neutral-200">
+                    Pantau kualitas air dan laporkan invasi ikan sapu-sapu demi kelestarian ekosistem lokal.
+                  </p>
                 </div>
               </div>
 
-              {/* Fitur Utama Pemetaan Berdasarkan Pilarmu */}
+              {/* Fitur Utama Pemetaan Berdasarkan Pilar */}
               <div className="space-y-3">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-400">Cara Menggunakan Platform Ini:</h3>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-400">
+                  Cara Menggunakan Platform Ini:
+                </h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div className="p-3 bg-emerald-50/60 border border-emerald-200/60 rounded-xl space-y-1">
@@ -118,9 +126,8 @@ export default function Home() {
         </div>
       )}
 
-      {/* ─── HERO SECTION (SESUAI DESAIN GAMBAR) ─── */}
+      {/* ─── HERO SECTION ─── */}
       <div className="relative w-full h-[420px] md:h-[500px] bg-[#008000] overflow-hidden flex items-center">
-        {/* Konten Teks Kiri */}
         <div className="absolute left-6 md:left-16 z-20 max-w-xl text-white space-y-3">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#AFD14D] animate-pulse"></span>
@@ -135,15 +142,13 @@ export default function Home() {
           </h1>
           <p className="text-sm md:text-base text-neutral-100/90 leading-relaxed font-medium">
             Sistem informasi pemetaan berkala dan edukasi ekologis limbah
-            eksoskeleton sisa guna ikan sapu-sapu (<b>Plecostomus</b>) untuk perairan
+            eksoskeleton sisa guna ikan sapu-sapu (<b>Pterygoplichthys</b>) untuk perairan
             urban yang lebih sehat.
           </p>
         </div>
 
-        {/* Bentuk Lengkungan Estetis Hijau Gelap (Wave Overlay) */}
         <div className="absolute inset-y-0 left-0 w-full md:w-[60%] bg-[#1E4D2B] z-10 clip-wave hidden md:block"></div>
 
-        {/* Foto Utama Latar Belakang */}
         <div className="absolute inset-y-0 right-0 w-full md:w-[65%] h-full z-0">
           <div className="absolute inset-0 bg-gradient-to-r from-[#008000] via-[#008000]/60 to-transparent md:bg-gradient-to-r md:from-[#1E4D2B] md:via-transparent md:to-transparent z-10" />
           <img
@@ -156,7 +161,6 @@ export default function Home() {
 
       {/* ─── KONTEN INTI RISET & NARASI ISU VIRAL ─── */}
       <div className="max-w-5xl mx-auto px-5 mt-12 space-y-12">
-        {/* Blok Pengantar Isu Viral */}
         <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-neutral-200/60 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
           <div className="md:col-span-2 space-y-3">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-600 text-xs font-bold border border-red-100">
@@ -198,7 +202,6 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {/* Kartu 1 */}
             <div className="bg-white p-5 rounded-2xl border border-neutral-200 shadow-sm hover:border-[#008000]/40 transition-all group">
               <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#008000] flex items-center justify-center font-bold mb-3 group-hover:scale-105 transition-transform">
                 📍
@@ -212,7 +215,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Kartu 2 */}
             <div className="bg-white p-5 rounded-2xl border border-neutral-200 shadow-sm hover:border-[#008000]/40 transition-all group">
               <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#008000] flex items-center justify-center font-bold mb-3 group-hover:scale-105 transition-transform">
                 📖
@@ -226,7 +228,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Kartu 3 */}
             <div className="bg-white p-5 rounded-2xl border border-neutral-200 shadow-sm hover:border-[#008000]/40 transition-all group">
               <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#008000] flex items-center justify-center font-bold mb-3 group-hover:scale-105 transition-transform">
                 📢
@@ -243,7 +244,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ─── MODAL OVERLAY (TETAP TERJAGA UTUH) ─── */}
+      {/* ─── MODAL OVERLAY AUTH ─── */}
       {showAuthModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md transition-all duration-300">
           <div className="w-full max-w-sm p-6 bg-white rounded-2xl shadow-2xl text-center transform scale-100 transition-transform border border-neutral-100">
@@ -267,7 +268,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* Tambahan CSS Khusus */}
+      {/* Style Tambahan */}
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -279,3 +280,4 @@ export default function Home() {
       />
     </div>
   );
+}
