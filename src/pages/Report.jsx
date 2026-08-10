@@ -262,60 +262,60 @@ export default function Report() {
   const statusObj = getStatusKualitas(totalSkor);
 
   // Helper Verifikasi Lokasi Perairan via Overpass API (Teroptimasi)
- const checkIfOnWater = async (lat, lng) => {
-   // 1. Abort Controller untuk cegah hang (timeout 5 detik)
-   const controller = new AbortController();
-   const timeoutId = setTimeout(() => controller.abort(), 8000);
+//  const checkIfOnWater = async (lat, lng) => {
+//    // 1. Abort Controller untuk cegah hang (timeout 5 detik)
+//    const controller = new AbortController();
+//    const timeoutId = setTimeout(() => controller.abort(), 8000);
  
-   // 2. Gunakan Delta lebih kecil (~0.0004 atau radius ~40-50 meter agar tidak meloloskan daratan di sekitar sungai)
-   const delta = 0.0005; 
+//    // 2. Gunakan Delta lebih kecil (~0.0004 atau radius ~40-50 meter agar tidak meloloskan daratan di sekitar sungai)
+//    const delta = 0.0005; 
    
-   const query = `
-     [out:json][timeout:10];
-     (
-       node["natural"="water"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
-       way["natural"="water"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
-       way["waterway"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
-       relation["waterway"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
-     );
-     out count;
-   `;
+//    const query = `
+//      [out:json][timeout:10];
+//      (
+//        node["natural"="water"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
+//        way["natural"="water"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
+//        way["waterway"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
+//        relation["waterway"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
+//      );
+//      out count;
+//    `;
  
-   try {
-     const res = await fetch("https://overpass-api.de/api/interpreter", {
-       method: "POST",
-       body: "data=" + encodeURIComponent(query),
-       headers: {
-         "Content-Type": "application/x-www-form-urlencoded",
-       },
-       signal: controller.signal,
-     });
+//    try {
+//      const res = await fetch("https://overpass-api.de/api/interpreter", {
+//        method: "POST",
+//        body: "data=" + encodeURIComponent(query),
+//        headers: {
+//          "Content-Type": "application/x-www-form-urlencoded",
+//        },
+//        signal: controller.signal,
+//      });
  
-     clearTimeout(timeoutId);
+//      clearTimeout(timeoutId);
  
-     if (!res.ok) {
-       throw new Error(`Server Overpass bermasalah (Status: ${res.status})`);
-     }
+//      if (!res.ok) {
+//        throw new Error(`Server Overpass bermasalah (Status: ${res.status})`);
+//      }
  
-     const data = await res.json();
+//      const data = await res.json();
  
-     // Jika ada elemen perairan/sungai terdeteksi di koordinat tersebut
-     const isWater = data.elements && data.elements.length > 0;
-     return isWater;
+//      // Jika ada elemen perairan/sungai terdeteksi di koordinat tersebut
+//      const isWater = data.elements && data.elements.length > 0;
+//      return isWater;
  
-   } catch (err) {
-     console.warn("Validasi Overpass API gagal/timeout:", err.message);
+//    } catch (err) {
+//      console.warn("Validasi Overpass API gagal/timeout:", err.message);
  
-     // 3. FALLBACK AMAN: Jika Overpass API timeout/down, 
-     // Gunakan fungsi hitung jarak lokal (isPointNearRiver) dari array 'rivers' bawaan aplikasi
-     if (typeof isPointNearRiver === "function" && typeof rivers !== "undefined") {
-       return isPointNearRiver(lat, lng, rivers, 0.5); // Toleransi 500 meter dari vektor lokal
-     }
+//      // 3. FALLBACK AMAN: Jika Overpass API timeout/down, 
+//      // Gunakan fungsi hitung jarak lokal (isPointNearRiver) dari array 'rivers' bawaan aplikasi
+//      if (typeof isPointNearRiver === "function" && typeof rivers !== "undefined") {
+//        return isPointNearRiver(lat, lng, rivers, 0.5); // Toleransi 500 meter dari vektor lokal
+//      }
  
-     // Jika tidak ada data lokal, kembalikan false agar daratan TIDAK lolos otomatis
-     return false; 
-   }
- };
+//      // Jika tidak ada data lokal, kembalikan false agar daratan TIDAK lolos otomatis
+//      return false; 
+//    }
+//  };
 
   // Ambil Lokasi GPS Perangkat
   const handleGetCurrentLocation = () => {
