@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogIn, MapPin, BookOpen, AlertCircle, Award, HelpCircle, X, ShieldAlert } from "lucide-react";
 
+// Pastikan import supabase Client kamu sudah benar
+import { supabase } from "../supabaseClient"; 
+
 // Pastikan lokasi file gambar ini sesuai di folder projekmu
 import sungaiImg from "../asset/sungai sapu-sapu.jpg";
 
@@ -10,21 +13,38 @@ export default function Home() {
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   // ─── POPUP PANDUAN UTAMA ───
-  // Selalu bernilai true saat komponen di-mount / halaman di-refresh
   const [showGuide, setShowGuide] = useState(true);
 
   // State pendukung fallback gambar
   const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
-    // Memeriksa autentikasi user
-    const savedUser = localStorage.getItem("ecoMapUser");
-    if (!savedUser) {
-      const timer = setTimeout(() => {
+    // Memeriksa autentikasi user dari Supabase
+    const checkUserAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      // Jika TIDAK ada session/user, tampilkan modal auth
+      if (!session) {
         setShowAuthModal(true);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
+      } else {
+        setShowAuthModal(false);
+      }
+    };
+
+    checkUserAuth();
+
+    // Listener untuk perubahan auth real-time (opsional, untuk memastikan sync saat login/logout)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        setShowAuthModal(true);
+      } else {
+        setShowAuthModal(false);
+      }
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
   }, []);
 
   // Fungsi untuk menutup panduan hanya pada sesi tampilan saat ini

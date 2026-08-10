@@ -175,7 +175,7 @@ export default function Profile({ onAuthChange }) {
               to="/admin"
               className="w-full py-3 bg-[#2B6141] hover:bg-[#204931] text-white rounded-xl font-bold text-center flex items-center justify-center gap-2 shadow-sm transition-colors"
             >
-              <ShieldCheck size={20} /> Masuk Panel Admin
+              <ShieldCheck size={20} /> Masuk Halaman Admin
             </Link>
           )}
 
@@ -276,12 +276,9 @@ export default function Profile({ onAuthChange }) {
                   className="w-full bg-white py-2 px-4 rounded-full flex items-center justify-between shadow-sm hover:bg-neutral-50 transition-colors"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-blue-600 text-sm">G</span>
+                    <img src="google.jpg" alt="Google Logo" className="w-6 h-6" />
                     <span className="text-emerald-900 font-bold text-xs">Login With Google</span>
                   </div>
-                  <span className="text-[10px] underline text-emerald-800 font-semibold">
-                    Instant Login
-                  </span>
                 </button>
 
                 <button
@@ -290,12 +287,9 @@ export default function Profile({ onAuthChange }) {
                   className="w-full bg-white py-2 px-4 rounded-full flex items-center justify-between shadow-sm hover:bg-neutral-50 transition-colors"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-black text-sm"></span>
+                    <img src="apple.jpg" alt="Apple Logo" className="w-6 h-6" />
                     <span className="text-emerald-900 font-bold text-xs">Login With Apple</span>
                   </div>
-                  <span className="text-[10px] underline text-emerald-800 font-semibold">
-                    Instant Login
-                  </span>
                 </button>
               </div>
             </form>
