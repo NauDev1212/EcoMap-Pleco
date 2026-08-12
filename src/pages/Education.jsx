@@ -175,11 +175,20 @@ export default function Education() {
           </div>
         </section>
 
-        {/* ─── SUB JUDUL 2: PEMANFAATAN NON-PANGAN ─── */}
+        {/* ─── SUB JUDUL 2: IKAN LOKAL TERANCAM PUNAH ─── */}
+        
+
+
+
+        {/* ─── SUB JUDUL 3: IKAN LOKAL YANG MASIH BERTAHAN HIDUP ─── */}
+        
+
+
+        {/* ─── SUB JUDUL 4: PEMANFAATAN NON-PANGAN ─── */}
         <section className="space-y-4">
           <div className="border-b-2 border-[#008000]/20 pb-2">
             <h2 className="text-2xl font-bold text-[#008000] flex items-center gap-2">
-              <Leaf size={24} /> 2. Pemanfaatan Non-Pangan
+              <Leaf size={24} /> 4. Pemanfaatan Non-Pangan
             </h2>
             <p className="text-xs text-neutral-600 mt-1">
               Karena isu kandungan logam berat di beberapa sungai Indonesia,
@@ -263,11 +272,11 @@ export default function Education() {
           </div>
         </section>
 
-        {/* ─── SUB JUDUL 3: SOLUSI ERADIKASI MENURUT MUI ─── */}
+        {/* ─── SUB JUDUL 5: SOLUSI ERADIKASI MENURUT MUI ─── */}
         <section className="space-y-4">
           <div className="border-b-2 border-[#008000]/20 pb-2">
             <h2 className="text-2xl font-bold text-[#008000] flex items-center gap-2">
-              <ShieldAlert size={24} /> 3. Solusi Pembasmian Yang Logis & Manusiawi              
+              <ShieldAlert size={24} /> 5. Solusi Pembasmian Yang Logis & Manusiawi              
             </h2>
             <p className="text-xs text-neutral-600 mt-1">
               Sebagai spesies asing invasif yang merusak habitat lokal, populasi

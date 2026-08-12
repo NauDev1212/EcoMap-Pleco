@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 
 
-// iseng nambahin
 // Data Koordinat Vektor Sungai Jakarta
 const rivers = [
   {
@@ -96,6 +95,14 @@ const RIVERS_LIST = [
   "Kali Pesanggrahan",
   "Kali Sunter",
   "Kali Angke"
+];   
+
+// Daftar Nama Sungai Umum
+const TYPE_USER = [
+  "Masyarakat Umum",
+  "Instansi Pemerintah",
+  "Akademisi / Peneliti",
+  "Komunitas Lingkungan",
 ];   
 
 // Helper Component untuk Menggeser Tampilan Peta
@@ -189,7 +196,9 @@ const ECOLOGICAL_INDICATORS = [
 export default function Report() {
   // Identitas & Info Umum
   const [nama, setNama] = useState("");
-  const [email, setEmail] = useState("");
+  const [selectedUserKategori, setSelectedUserKategori] = useState("");
+  const [customTypeUser, setCustomTypeUser] = useState("");
+
   const [judul, setJudul] = useState("");
   const [wilayah, setWilayah] = useState("");
   const [waktuPengamatan, setWaktuPengamatan] = useState("");
@@ -265,10 +274,10 @@ export default function Report() {
  const checkIfOnWater = async (lat, lng) => {
    // 1. Abort Controller untuk cegah hang (timeout 5 detik)
    const controller = new AbortController();
-   const timeoutId = setTimeout(() => controller.abort(), 4000);
+   const timeoutId = setTimeout(() => controller.abort(), 5000);
  
-   // 2. Gunakan Delta lebih kecil (~0.0004 atau radius ~40-50 meter agar tidak meloloskan daratan di sekitar sungai)
-   const delta = 1.5000; 
+   // 2. Gunakan Delta lebih kecil (~0.0004 atau radius ~4-5 Km agar tidak meloloskan daratan di sekitar sungai)
+   const delta = 0.0500; 
    
    const query = `
      [out:json][timeout:10];
@@ -309,7 +318,7 @@ export default function Report() {
      // 3. FALLBACK AMAN: Jika Overpass API timeout/down, 
      // Gunakan fungsi hitung jarak lokal (isPointNearRiver) dari array 'rivers' bawaan aplikasi
      if (typeof isPointNearRiver === "function" && typeof rivers !== "undefined") {
-       return isPointNearRiver(lat, lng, rivers, 0.5); // Toleransi 500 meter dari vektor lokal
+       return isPointNearRiver(lat, lng, rivers, 4.0); // Toleransi 4 km dari vektor lokal
      }
  
      // Jika tidak ada data lokal, kembalikan false agar daratan TIDAK lolos otomatis
@@ -383,7 +392,8 @@ export default function Report() {
 
   const resetForm = () => {
     setNama("");
-    setEmail("");
+    setCustomTypeUser("");
+    setSelectedUserKategori("");
     setJudul("");
     setWilayah("");
     setWaktuPengamatan("");
@@ -404,11 +414,13 @@ export default function Report() {
 
     // Validasi Kelengkapan Pertanyaan
     if (!nama.trim()) return alert("Nama Lengkap Pelapor wajib diisi!");
-    if (!email.trim()) return alert("Alamat Email wajib diisi!");
     if (!judul.trim()) return alert("Judul Laporan wajib diisi!");
     if (!wilayah.trim()) return alert("Wilayah (Kecamatan/Kab/Kota) wajib diisi!");
     if (!waktuPengamatan) return alert("Waktu Pengamatan wajib ditentukan!");
-    
+
+    const finalTypeUser = selectedUserKategori === "Lainnya" ? customTypeUser : selectedUserKategori;
+    if (!finalTypeUser.trim()) return alert("Pilih Kategori Pengguna");
+
     const finalRiverName = selectedRiverName === "Lainnya" ? customRiverName : selectedRiverName;
     if (!finalRiverName.trim()) return alert("Pilih atau isi Nama Aliran Sungai!");
 
@@ -463,7 +475,7 @@ export default function Report() {
         {
           title: judul,
           user_name: nama,
-          user_email: email,
+          user_type: finalTypeUser,
           description: keteranganEkologis,
           latitude: lat,
           longitude: lng,
@@ -557,15 +569,29 @@ export default function Report() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-black mb-1">Alamat Email *</label>
-                <input
-                  type="email"
+                <label className="block text-xs font-bold text-black mb-1">Kategori Pengguna</label>
+                <select
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="ahmad@example.com"
-                  className="w-full bg-white px-3 py-2 text-sm text-gray-800 border rounded focus:outline-none focus:ring-2 focus:ring-green-600"
-                />
+                  value={selectedUserKategori}
+                  onChange={(e) => setSelectedUserKategori(e.target.value)}
+                  className="w-full bg-white px-3 py-2 text-sm font-semibold text-gray-800 border rounded focus:outline-none focus:ring-2 focus:ring-green-600 cursor-pointer"
+                >
+                  <option value="">-- Pilih Kategori Pengguna --</option>
+                  {TYPE_USER.map((t, idx) => (
+                    <option key={idx} value={t}>{t}</option>
+                  ))}
+                </select>
+
+                {selectedUserKategori === "Lainnya" && (
+                  <input
+                    type="text"
+                    required
+                    value={customTypeUser}
+                    onChange={(e) => setCustomTypeUser(e.target.value)}
+                    placeholder="Masukkan Kategori Pengguna lainnya..."
+                    className="w-full mt-2 bg-white px-3 py-2 text-sm text-gray-800 border rounded focus:outline-none focus:ring-2 focus:ring-green-600"
+                  />
+                )}
               </div>
 
               <div className="md:col-span-2">
