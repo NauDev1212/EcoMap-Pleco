@@ -176,8 +176,7 @@ export default function Education() {
         </section>
 
         {/* ─── SUB JUDUL 2: IKAN LOKAL TERANCAM PUNAH ─── */}
-        
-
+      
 
 
         {/* ─── SUB JUDUL 3: IKAN LOKAL YANG MASIH BERTAHAN HIDUP ─── */}
