@@ -322,7 +322,7 @@ export default function Report() {
      }
  
      // Jika tidak ada data lokal, kembalikan false agar daratan TIDAK lolos otomatis
-     return false; 
+     return; 
    }
  };
 
