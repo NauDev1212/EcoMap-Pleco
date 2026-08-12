@@ -2,52 +2,49 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogIn, MapPin, BookOpen, AlertCircle, Award, HelpCircle, X, ShieldAlert } from "lucide-react";
 
-// Pastikan import supabase Client kamu sudah benar
+// Import supabase Client
 import { supabase } from "../supabaseClient"; 
 
-// Pastikan lokasi file gambar ini sesuai di folder projekmu
+// Import gambar
 import sungaiImg from "../asset/sungai sapu-sapu.jpg";
 
 export default function Home() {
   const navigate = useNavigate();
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  // ─── POPUP PANDUAN UTAMA ───
+  // POPUP PANDUAN UTAMA
   const [showGuide, setShowGuide] = useState(true);
 
   // State pendukung fallback gambar
   const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
+
     // Memeriksa autentikasi user dari Supabase
     const checkUserAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      
-      // Jika TIDAK ada session/user, tampilkan modal auth
-      if (!session) {
-        setShowAuthModal(true);
-      } else {
-        setShowAuthModal(false);
+      if (isMounted) {
+        setShowAuthModal(!session);
       }
     };
 
     checkUserAuth();
 
-    // Listener untuk perubahan auth real-time (opsional, untuk memastikan sync saat login/logout)
+    // Listener untuk perubahan auth real-time
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        setShowAuthModal(true);
-      } else {
-        setShowAuthModal(false);
+      if (isMounted) {
+        setShowAuthModal(!session);
       }
     });
 
     return () => {
+      isMounted = false;
       subscription?.unsubscribe();
     };
   }, []);
 
-  // Fungsi untuk menutup panduan hanya pada sesi tampilan saat ini
+  // Fungsi untuk menutup panduan
   const handleCloseGuide = () => {
     setShowGuide(false);
   };
@@ -80,13 +77,17 @@ export default function Home() {
               
               {/* Area Gambar Poster */}
               <div className="w-full h-52 bg-zinc-800 rounded-2xl overflow-hidden border border-neutral-200 shadow-inner relative group">
-                {!imgError && (
+                {!imgError ? (
                   <img 
                     src={sungaiImg} 
                     alt="Poster Panduan Website" 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     onError={() => setImgError(true)}
                   />
+                ) : (
+                  <div className="w-full h-full bg-emerald-900 flex items-center justify-center text-white text-xs">
+                    Gagal memuat gambar
+                  </div>
                 )}
 
                 {/* Overlay Informasi Gambar */}
@@ -146,7 +147,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* ─── HERO SECTION ─── */}
+      {/* HERO SECTION */}
       <div className="relative w-full h-[420px] md:h-[500px] bg-[#008000] overflow-hidden flex items-center">
         <div className="absolute left-6 md:left-16 z-20 max-w-xl text-white space-y-3">
           <div className="flex items-center gap-2">
@@ -167,7 +168,8 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="absolute inset-y-0 left-0 w-full md:w-[60%] bg-[#1E4D2B] z-10 clip-wave hidden md:block"></div>
+        {/* Clip-path wave menggunakan utility Tailwind */}
+        <div className="absolute inset-y-0 left-0 w-full md:w-[60%] bg-[#1E4D2B] z-10 [clip-path:polygon(0_0,100%_0,78%_100%,0%_100%)] hidden md:block"></div>
 
         <div className="absolute inset-y-0 right-0 w-full md:w-[65%] h-full z-0">
           <div className="absolute inset-0 bg-gradient-to-r from-[#008000] via-[#008000]/60 to-transparent md:bg-gradient-to-r md:from-[#1E4D2B] md:via-transparent md:to-transparent z-10" />
@@ -179,7 +181,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ─── KONTEN INTI RISET & NARASI ISU VIRAL ─── */}
+      {/* KONTEN INTI RISET & NARASI ISU VIRAL */}
       <div className="max-w-5xl mx-auto px-5 mt-12 space-y-12">
         <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-neutral-200/60 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
           <div className="md:col-span-2 space-y-3">
@@ -264,7 +266,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ─── MODAL OVERLAY AUTH ─── */}
+      {/* MODAL OVERLAY AUTH */}
       {showAuthModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md transition-all duration-300">
           <div className="w-full max-w-sm p-6 bg-white rounded-2xl shadow-2xl text-center transform scale-100 transition-transform border border-neutral-100">
@@ -287,17 +289,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
-      {/* Style Tambahan */}
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-        .clip-wave {
-          clip-path: polygon(0 0, 100% 0, 78% 100%, 0% 100%);
-        }
-      `,
-        }}
-      />
     </div>
   );
 }
