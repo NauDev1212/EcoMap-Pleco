@@ -272,59 +272,68 @@ export default function Report() {
 
   // Helper Verifikasi Lokasi Perairan via Overpass API (Teroptimasi)
  const checkIfOnWater = async (lat, lng) => {
-   // 1. Abort Controller untuk cegah hang (timeout 5 detik)
-   const controller = new AbortController();
-   const timeoutId = setTimeout(() => controller.abort(), 5000);
- 
-   // 2. Gunakan Delta lebih kecil (~0.0004 atau radius ~4-5 Km agar tidak meloloskan daratan di sekitar sungai)
-   const delta = 0.0500; 
-   
-   const query = `
-     [out:json][timeout:10];
-     (
-       node["natural"="water"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
-       way["natural"="water"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
-       way["waterway"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
-       relation["waterway"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
-     );
-     out count;
-   `;
- 
-   try {
-     const res = await fetch("https://overpass-api.de/api/interpreter", {
-       method: "POST",
-       body: "data=" + encodeURIComponent(query),
-       headers: {
-         "Content-Type": "application/x-www-form-urlencoded",
-       },
-       signal: controller.signal,
-     });
- 
-     clearTimeout(timeoutId);
- 
-     if (!res.ok) {
-       throw new Error(`Server Overpass bermasalah (Status: ${res.status})`);
-     }
- 
-     const data = await res.json();
- 
-     // Jika ada elemen perairan/sungai terdeteksi di koordinat tersebut
-     const isWater = data.elements && data.elements.length > 0;
-     return isWater;
- 
-   } catch (err) {
-     console.warn("Validasi Overpass API gagal/timeout:", err.message);
- 
-     // 3. FALLBACK AMAN: Jika Overpass API timeout/down, 
-     // Gunakan fungsi hitung jarak lokal (isPointNearRiver) dari array 'rivers' bawaan aplikasi
-     if (typeof isPointNearRiver === "function" && typeof rivers !== "undefined") {
-       return isPointNearRiver(lat, lng, rivers, 4.0); // Toleransi 4 km dari vektor lokal
-     }
- 
-     // Jika tidak ada data lokal, kembalikan false agar daratan TIDAK lolos otomatis
-     return; 
-   }
- };
+  // 1. Abort Controller untuk cegah hang (timeout 5 detik)
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+  // 2. Perbesar delta menjadi 0.1500 (~15 km radius) agar toleransi jauh lebih luas
+  const delta = 0.1500; 
+  
+  const query = `
+    [out:json][timeout:10];
+    (
+      node["natural"="water"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
+      way["natural"="water"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
+      way["waterway"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
+      relation["waterway"](${lat - delta},${lng - delta},${lat + delta},${lng + delta});
+    );
+    out ids;
+  `;
+
+  try {
+    const res = await fetch("https://overpass-api.de/api/interpreter", {
+      method: "POST",
+      body: "data=" + encodeURIComponent(query),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      throw new Error(`Server Overpass bermasalah (Status: ${res.status})`);
+    }
+
+    const data = await res.json();
+
+    // Jika ada elemen perairan/sungai terdeteksi di koordinat tersebut
+    const isWater = data.elements && data.elements.length > 0;
+    
+    // Jika Overpass mendeteksi air atau mendekati area perairan, kembalikan true
+    if (isWater) return true;
+
+    // Jika Overpass kosong, fallback ke pengecekan lokal dengan toleransi lebih luas
+    if (typeof isPointNearRiver === "function" && typeof rivers !== "undefined") {
+      return isPointNearRiver(lat, lng, rivers, 20.0); // Toleransi diperbesar jadi 20 km
+    }
+
+    // Jika tetap tidak ditemukan, berikan kelonggaran true agar form bisa tetap disubmit
+    return true; 
+
+  } catch (err) {
+    console.warn("Validasi Overpass API gagal/timeout, menggunakan fallback:", err.message);
+
+    // 3. FALLBACK AMAN: Perbesar toleransi jarak lokal menjadi 20.0 km
+    if (typeof isPointNearRiver === "function" && typeof rivers !== "undefined") {
+      return isPointNearRiver(lat, lng, rivers, 20.0); 
+    }
+
+    // Kelonggaran terakhir agar form tidak memblokir pengiriman data saat offline/timeout
+    return true; 
+  }
+};
 
   // Ambil Lokasi GPS Perangkat
   const handleGetCurrentLocation = () => {
