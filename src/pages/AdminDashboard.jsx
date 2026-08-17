@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -31,6 +32,7 @@ L.Icon.Default.mergeOptions({
 });
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState({ totalUsers: 0, totalApproved: 0, totalPending: 0 });
   const [pendingReports, setPendingReports] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -135,9 +137,9 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    window.location.href = "/";
+  const handleExitAdmin = () => {
+    navigate("/profile"); 
+    window.location.href = "/profil";
   };
 
   return (
@@ -164,7 +166,7 @@ export default function AdminDashboard() {
         </div>
 
         <button
-          onClick={handleLogout}
+          onClick={handleExitAdmin}
           className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-xl transition-colors"
         >
           <LogOut size={20} />

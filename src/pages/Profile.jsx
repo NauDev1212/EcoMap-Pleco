@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
 import { CheckCircle, LogOut, ShieldCheck } from "lucide-react";
 import { supabase } from "../supabaseClient";
@@ -17,6 +18,7 @@ export default function Profile({ onAuthChange }) {
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
 
   // Check Session saat komponen dimuat & dengarkan perubahan status Auth
@@ -53,6 +55,23 @@ export default function Profile({ onAuthChange }) {
   // Evaluasi apakah user yang sedang login adalah Admin
   const isAdmin = user && ADMIN_EMAILS.includes(user.email);
 
+  // Fungsi Helper untuk mengambil nama dari OAuth (Google/Apple) maupun Register Manual
+  const getUserDisplayName = () => {
+    if (!user) return "Pengunjung";
+    const meta = user.user_metadata;
+    
+    // Google/Apple biasanya menyimpan di full_name atau name
+    const name = meta?.full_name || meta?.name || meta?.display_name;
+    if (name) return name;
+    
+    // Fallback: Ambil nama dari prefix email (sebelum karakter @)
+    if (user.email) return user.email.split("@")[0];
+    
+    return "Pengunjung";
+  };
+
+  const displayName = getUserDisplayName();
+
   // 1. REGISTER dengan Verifikasi E-Mail
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -68,6 +87,7 @@ export default function Profile({ onAuthChange }) {
       options: {
         data: {
           display_name: username,
+          full_name: username,
         },
         emailRedirectTo: window.location.origin,
       },
@@ -150,12 +170,14 @@ export default function Profile({ onAuthChange }) {
         /* DASHBOARD USER SETELAH LOGIN */
         <div className="w-full max-w-md bg-white border rounded-2xl shadow-md p-6 space-y-6">
           <div className="flex items-center space-x-4 border-b pb-4">
+            {/* Avatar Inisial Menggunakan displayName */}
             <div className="h-16 w-16 bg-[#2B6141] text-white rounded-full flex items-center justify-center text-2xl font-bold">
-              {(user.user_metadata?.display_name || user.email || "U").charAt(0).toUpperCase()}
+              {displayName.charAt(0).toUpperCase()}
             </div>
             <div>
               <h2 className="text-xl font-bold text-neutral-800 flex items-center gap-1.5 flex-wrap">
-                {user.user_metadata?.display_name || "Pengunjung"}
+                {/* Nama Tampilan Menggunakan displayName */}
+                {displayName}
                 <CheckCircle size={18} className="text-[#2B6141]" />
                 
                 {/* Badge khusus jika role akun adalah Admin */}
@@ -237,14 +259,24 @@ export default function Profile({ onAuthChange }) {
                 <label className="block text-white font-medium text-sm mb-1.5 pl-1">
                   Password
                 </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full bg-white px-4 py-3 rounded-2xl text-neutral-800 font-medium focus:outline-none"
-                  required
-                />
+                <div className="relative w-full flex items-center">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full bg-white px-4 py-3 pr-12 rounded-2xl text-neutral-800 font-medium focus:outline-none"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 text-neutral-400 hover:text-neutral-700 transition-colors focus:outline-none"
+                    aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye />}
+                  </button>
+                </div>
               </div>
 
               {/* Tombol Submit */}

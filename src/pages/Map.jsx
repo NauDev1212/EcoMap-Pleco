@@ -31,13 +31,11 @@ export default function Map({ isLoggedIn = true }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeMetrics, setActiveMetrics] = useState(null);
 
-  // Ref untuk mengontrol scroll horizontal carousel
   const carouselRef = useRef(null);
 
-  // Fungsi untuk scroll ke kiri dan ke kanan
   const handleScroll = (direction) => {
     if (carouselRef.current) {
-      const scrollAmount = 340; // Jarak scroll setara lebar 1 card + gap
+      const scrollAmount = 340;
       carouselRef.current.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
@@ -101,93 +99,93 @@ export default function Map({ isLoggedIn = true }) {
     },
   ];
 
-  // ─── HELPER MENDAPATKAN TOTAL SKOR EKOLOGIS ───
+  // ─── HELPER MENDAPATKAN TOTAL SKOR TERTIMBANG WQI (20 - 100) ───
   const getScoreValue = (report) => {
     if (!report) return 0;
 
     const eco = report.ecological_score;
+    
+    // Jika tersimpan sebagai objek hasil kalkulasi WQI
     if (typeof eco === "object" && eco !== null) {
+      if (typeof eco.totalWQI === "number") return eco.totalWQI;
       if (typeof eco.score_total === "number") return eco.score_total;
       if (typeof eco.total === "number") return eco.total;
     }
 
     if (typeof eco === "number") return eco;
+    if (typeof report.total_wqi === "number") return report.total_wqi;
     if (typeof report.density === "number") return report.density;
 
     return 0;
   };
 
-  // ─── HELPER PENENTU WARNA MARKER & BORDER ───
+  // ─── HELPER PENENTU WARNA MARKER BERDASARKAN RATA-RATA WQI ───
   const getMarkerColor = (report) => {
-    if (!report) return "#008000";
-
-    if (report.ecological_score?.color_indicator) {
-      return report.ecological_score.color_indicator;
-    }
-    if (report.marker_color) {
-      return report.marker_color;
-    }
+    if (!report) return "#ea4235";
 
     const score = getScoreValue(report);
 
-    if (score >= 19) return "#8B0000"; // Merah Pekat (Skor 19 - 25)
-    if (score >= 13) return "#FF8C00"; // Orange (Skor 13 - 18)
-    if (score >= 7) return "#FFFF00"; // Kuning (Skor 7 - 12)
-    return "#008000"; // Hijau (Skor 1 - 6)
+    // Patokan Kategori WQI (Skor 20 - 100)
+    if (score >= 80) return "#14cd14"; // Hijau (Sangat Baik / Normal: 80 - 100)
+    if (score >= 60) return "#ffd83d"; // Kuning (Tercemar Ringan: 60 - 79)
+    if (score >= 40) return "#FF8C00"; // Orange (Tercemar Sedang: 40 - 59)
+    return "#ea4235";                  // Merah (Tercemar Berat / Buruk: < 40)
   };
 
   // ─── HELPER TEKS INDIKATOR KETERANGAN ───
   const getDisplayIndicator = (report) => {
-    if (!report) return "Normal";
-
-    if (report.ecological_score?.kategori) {
-      return `${report.ecological_score.kategori} (Skor: ${getScoreValue(report)})`;
-    }
+    if (!report) return "Tanpa Data";
 
     const score = getScoreValue(report);
-    if (score >= 19) return `Merah Pekat (Skor: ${score})`;
-    if (score >= 13) return `Orange / Tercemar Sedang (Skor: ${score})`;
-    if (score >= 7) return `Kuning / Tercemar Ringan (Skor: ${score})`;
-
-    return `Hijau / Normal (Skor: ${score})`;
+    if (score >= 80) return `Sangat Baik / Normal (WQI: ${score})`;
+    if (score >= 60) return `Tercemar Ringan (WQI: ${score})`;
+    if (score >= 40) return `Tercemar Sedang (WQI: ${score})`;
+    return `Tercemar Berat (WQI: ${score})`;
   };
 
-  // ─── HELPER MENDAPATKAN PH AIR ───
-  const getPHValue = (report) => {
-    if (!report) return "-";
-    const params = report.journal_reference?.parameter;
-    if (params && (params.ph || params.ph_level || params.ph_value)) {
-      return params.ph || params.ph_level || params.ph_value;
-    }
-    return report.ph || report.ph_level || report.ph_value || "-";
-  };
+  // ─── HELPER PH AIR STATIS (REFERENSI JURNAL 5 SUNGAI) ───
+const getPHValue = () => {
+  // Langsung kembalikan nilai statis yang Anda inginkan
+  return "6.5 pH"; // Atau rentang seperti: return "3 - 8 pH";
 
-  // ─── HELPER MENDAPATKAN DISSOLVED OXYGEN (DO) ───
+};
+
+  // ─── HELPER MENDAPATKAN SUB-INDEKS / NILAI DISSOLVED OXYGEN (DO) ───
   const getDOValue = (report) => {
     if (!report) return "-";
+
+    const eco = report.ecological_score;
+    if (eco && typeof eco === "object") {
+      if (eco.subIndexDO !== undefined) return `${eco.subIndexDO} Poin (WQI)`;
+      if (eco.do_score !== undefined) return `${eco.do_score} Poin`;
+    }
+
     const params = report.journal_reference?.parameter;
     if (params && (params.do_value || params.do)) {
       return params.do_value || params.do;
     }
-    return report.do_value || report.do || "-";
+    return report.do_value || report.do || "N/A";
   };
 
-  // ─── HELPER MENDAPATKAN LOGAM BERAT ───
+  // ─── HELPER MENDAPATKAN SUB-INDEKS / NILAI LOGAM BERAT ───
   const getHeavyMetalValue = (report) => {
     if (!report) return "-";
+
+    const eco = report.ecological_score;
+    if (eco && typeof eco === "object") {
+      if (eco.subIndexMetal !== undefined) return `${eco.subIndexMetal} Poin (WQI)`;
+      if (eco.metal_score !== undefined) return `${eco.metal_score} Poin`;
+    }
+
     const params = report.journal_reference?.parameter;
     if (params) {
       const list = [];
-      if (params.cd && params.cd !== "Tidak diteliti")
-        list.push(`Cd: ${params.cd}`);
-      if (params.hg && params.hg !== "Tidak diteliti")
-        list.push(`Hg: ${params.hg}`);
-      if (params.pb && params.pb !== "Tidak diteliti")
-        list.push(`Pb: ${params.pb}`);
-
+      if (params.cd && params.cd !== "Tidak diteliti") list.push(`Cd: ${params.cd}`);
+      if (params.hg && params.hg !== "Tidak diteliti") list.push(`Hg: ${params.hg}`);
+      if (params.pb && params.pb !== "Tidak diteliti") list.push(`Pb: ${params.pb}`);
       if (list.length > 0) return list.join(", ");
     }
-    return report.heavy_metal || "-";
+    return report.heavy_metal || "N/A";
   };
 
   // ─── HELPER MENDAPATKAN NAMA LOKASI ───
@@ -253,17 +251,13 @@ export default function Map({ isLoggedIn = true }) {
   }
 
   return (
-    /* DITAMBAHKAN: min-w-0 w-full max-w-full overflow-x-hidden pada kontainer utama */
     <div className="w-full max-w-full min-w-0 overflow-x-hidden min-h-screen bg-[#FDF1CE]/40 p-4 md:p-6 font-sans space-y-6">
       
-      {/* DITAMBAHKAN: min-w-0 pada Grid utama */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch w-full min-w-0">
         
         {/* PANEL PETA INTERAKTIF */}
-        {/* DITAMBAHKAN: min-w-0 pada kontainer col-span-8 */}
         <div className="lg:col-span-8 bg-[#D3C7A3] p-3 rounded-3xl border-4 border-[#008000]/20 shadow-md flex flex-col min-h-[480px] lg:h-[550px] min-w-0 w-full">
           
-          {/* DITAMBAHKAN: min-w-0 pada pembungkus MapContainer */}
           <div className="flex-1 w-full h-full rounded-2xl overflow-hidden z-10 relative min-w-0">
             <MapContainer
               center={jakartaCenter}
@@ -331,7 +325,7 @@ export default function Map({ isLoggedIn = true }) {
                           </span>
                         </p>
                         <p className="text-neutral-600">
-                          Status:{" "}
+                          Status WQI:{" "}
                           <span
                             className="font-semibold"
                             style={{ color: markerColor }}
@@ -347,7 +341,7 @@ export default function Map({ isLoggedIn = true }) {
             </MapContainer>
           </div>
 
-          {/* DISPLAY PARAMETER AIR */}
+          {/* DISPLAY PARAMETER AIR HASIL PERHITUNGAN WQI */}
           <div className="mt-3 bg-white/95 p-3.5 rounded-2xl border border-neutral-200 shadow-sm space-y-2 min-w-0">
             <div className="text-center border-b border-neutral-100 pb-2">
               <p className="text-[11px] font-bold uppercase tracking-wider text-neutral-400">
@@ -369,20 +363,20 @@ export default function Map({ isLoggedIn = true }) {
                 </p>
               </div>
 
-              {/* OKSIGEN TERLARUT (DO) */}
+              {/* OKSIGEN TERLARUT (DO SUB-INDEX) */}
               <div className="w-full sm:w-1/3 max-w-[200px] bg-blue-50/70 p-2.5 rounded-xl border border-blue-200/60 text-center shadow-sm">
                 <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-blue-700 mb-0.5">
-                  <Droplets size={15} /> Oksigen (DO)
+                  <Droplets size={15} /> Sub-Indeks DO
                 </div>
                 <p className="text-sm font-black text-blue-800">
                   {getDOValue(activeMetrics)}
                 </p>
               </div>
 
-              {/* LOGAM BERAT */}
+              {/* LOGAM BERAT SUB-INDEX */}
               <div className="w-full sm:w-1/3 max-w-[200px] bg-red-50/70 p-2.5 rounded-xl border border-red-200/60 text-center shadow-sm">
                 <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-red-700 mb-0.5">
-                  <AlertTriangle size={15} /> Logam Berat
+                  <AlertTriangle size={15} /> Sub-Indeks Logam
                 </div>
                 <p
                   className="text-xs font-extrabold text-red-800 truncate"
@@ -395,22 +389,21 @@ export default function Map({ isLoggedIn = true }) {
           </div>
         </div>
 
-        {/* PANEL KANAN */}
-        {/* DITAMBAHKAN: min-w-0 pada col-span-4 */}
+        {/* PANEL KANAN - LEGEND WQI */}
         <div className="lg:col-span-4 flex flex-col justify-between space-y-4 min-w-0 w-full">
           <div className="bg-white p-5 rounded-3xl shadow-sm border border-neutral-200 space-y-4">
             <h3 className="text-base font-extrabold text-neutral-800 border-b pb-2 tracking-tight flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#008000]"></span>{" "}
-              Indikator Kepadatan
+              Indikator Kualitas Air (WQI)
             </h3>
             <div className="grid grid-cols-2 gap-3 text-xs font-medium">
               <div className="flex items-center gap-2.5 p-1.5 bg-neutral-50 rounded-lg">
-                <span className="w-3.5 h-3.5 rounded-full bg-[#8B0000]"></span>
+                <span className="w-3.5 h-3.5 rounded-full bg-[#ea4235]"></span>
                 <div>
                   <p className="font-bold text-neutral-700 leading-none">
-                    Merah Pekat
+                    Merah
                   </p>
-                  <p className="text-[10px] text-neutral-400">Skor 19 - 25</p>
+                  <p className="text-[10px] text-neutral-400">Skor 20 - 39</p>
                 </div>
               </div>
 
@@ -420,27 +413,27 @@ export default function Map({ isLoggedIn = true }) {
                   <p className="font-bold text-neutral-700 leading-none">
                     Orange
                   </p>
-                  <p className="text-[10px] text-neutral-400">Skor 13 - 18</p>
+                  <p className="text-[10px] text-neutral-400">Skor 40 - 59</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2.5 p-1.5 bg-neutral-50 rounded-lg">
-                <span className="w-3.5 h-3.5 rounded-full bg-[#FFFF00]"></span>
+                <span className="w-3.5 h-3.5 rounded-full bg-[#ffd83d]"></span>
                 <div>
                   <p className="font-bold text-neutral-700 leading-none">
                     Kuning
                   </p>
-                  <p className="text-[10px] text-neutral-400">Skor 7 - 12</p>
+                  <p className="text-[10px] text-neutral-400">Skor 60 - 79</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2.5 p-1.5 bg-neutral-50 rounded-lg">
-                <span className="w-3.5 h-3.5 rounded-full bg-[#008000]"></span>
+                <span className="w-3.5 h-3.5 rounded-full bg-[#14cd14]"></span>
                 <div>
                   <p className="font-bold text-neutral-700 leading-none">
-                    Hijau (Normal)
+                    Hijau
                   </p>
-                  <p className="text-[10px] text-neutral-400">Skor 1 - 6</p>
+                  <p className="text-[10px] text-neutral-400">Skor 80 - 100</p>
                 </div>
               </div>
             </div>
@@ -471,7 +464,6 @@ export default function Map({ isLoggedIn = true }) {
       </div>
 
       {/* HISTORI LAPORAN (CAROUSEL) */}
-      {/* DITAMBAHKAN: min-w-0 pada pembungkus bagian histori */}
       <div className="space-y-3 pt-4 w-full max-w-full overflow-hidden min-w-0">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-neutral-300 pb-2">
           <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -503,7 +495,6 @@ export default function Map({ isLoggedIn = true }) {
           </p>
         ) : (
           <div className="relative group w-full max-w-full min-w-0 px-2 sm:px-10">
-            {/* Tombol Panah Kiri */}
             <button
               onClick={() => handleScroll("left")}
               className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-[#008000] text-neutral-700 hover:text-white p-2.5 rounded-full shadow-lg border border-neutral-200 transition-all focus:outline-none hidden sm:flex items-center justify-center"
@@ -512,7 +503,6 @@ export default function Map({ isLoggedIn = true }) {
               <ChevronLeft size={20} />
             </button>
 
-            {/* List Carousel Items */}
             <div
               ref={carouselRef}
               className="flex overflow-x-auto gap-4 py-3 px-1 scroll-smooth w-full max-w-full min-w-0"
@@ -558,7 +548,6 @@ export default function Map({ isLoggedIn = true }) {
               ))}
             </div>
 
-            {/* Tombol Panah Kanan */}
             <button
               onClick={() => handleScroll("right")}
               className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-[#008000] text-neutral-700 hover:text-white p-2.5 rounded-full shadow-lg border border-neutral-200 transition-all focus:outline-none hidden sm:flex items-center justify-center"

@@ -104,7 +104,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Fitur Utama Pemetaan Berdasarkan Pilar */}
+              {/* Fitur Utama Pemetaan Berdasarkan Pilar
               <div className="space-y-3">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-400">
                   Cara Menggunakan Platform Ini:
@@ -128,6 +128,57 @@ export default function Home() {
                     <p className="text-xs font-bold text-neutral-800">3. Kirim Laporan</p>
                     <p className="text-[11px] text-neutral-600">Daftarkan akunmu dan laporkan titik sebaran luapan populasi di lapangan secara kolektif.</p>
                   </div>
+                </div>
+              </div> */}
+
+              {/* Fitur Utama Pemetaan Berdasarkan Pilar */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-400">
+                  Cara Menggunakan Platform Ini:
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {/* 1. Tombol Pantau Peta Zonasi */}
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setShowGuide(false);
+                      navigate("/peta"); // Menuju ke halaman Map.jsx
+                    }}
+                    className="p-3 bg-emerald-50/60 border border-emerald-200/60 rounded-xl space-y-1 text-left w-full hover:bg-emerald-100/80 transition-all duration-200 hover:shadow-sm cursor-pointer group focus:outline-none"
+                  >
+                    <MapPin size={18} className="text-[#008000] group-hover:scale-110 transition-transform" />
+                    <p className="text-xs font-bold text-neutral-800">1. Pantau Peta Zonasi</p>
+                    <p className="text-[11px] text-neutral-600">Klik titik pantau di area Jakarta untuk melihat pH, DO, suhu, dan parameter logam berat.</p>
+                  </button>
+              
+                  {/* 2. Tombol Akses Edukasi */}
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setShowGuide(false);
+                      navigate("/edukasi"); // Menuju ke halaman Education.jsx
+                    }}
+                    className="p-3 bg-blue-50/60 border border-blue-200/60 rounded-xl space-y-1 text-left w-full hover:bg-blue-100/80 transition-all duration-200 hover:shadow-sm cursor-pointer group focus:outline-none"
+                  >
+                    <BookOpen size={18} className="text-blue-600 group-hover:scale-110 transition-transform" />
+                    <p className="text-xs font-bold text-neutral-800">2. Akses Edukasi</p>
+                    <p className="text-[11px] text-neutral-600">Pelajari pemanfaatan limbah eksoskeleton ikan sapu-sapu menjadi kitosan biopolimer.</p>
+                  </button>
+              
+                  {/* 3. Tombol Kirim Laporan */}
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setShowGuide(false);
+                      navigate("/laporan"); // Menuju ke halaman Report.jsx
+                    }}
+                    className="p-3 bg-amber-50/60 border border-amber-200/60 rounded-xl space-y-1 text-left w-full hover:bg-amber-100/80 transition-all duration-200 hover:shadow-sm cursor-pointer group focus:outline-none"
+                  >
+                    <ShieldAlert size={18} className="text-amber-600 group-hover:scale-110 transition-transform" />
+                    <p className="text-xs font-bold text-neutral-800">3. Kirim Laporan</p>
+                    <p className="text-[11px] text-neutral-600">Daftarkan akunmu dan laporkan titik sebaran luapan populasi di lapangan secara kolektif.</p>
+                  </button>
                 </div>
               </div>
 

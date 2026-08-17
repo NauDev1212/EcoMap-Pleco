@@ -1,644 +1,152 @@
-export const JOURNAL_DATA = [
-     {
-    "id_lokasi": "LOK-001",
-    "nama_sungai": "Sungai Ciliwung",
-    "segmen": "Kelapa Dua, Depok (hulu)",
-    "koordinat": {
-      "latitude": -6.3545,
-      "longitude": 106.8360
-    },
-    "tahun_penelitian": 2014,
-    "parameter_kimia": {
-      "DO": {
-        "nilai": 3.5,
-        "satuan": "mg/L"
-      },
-      "pH": {
-        "nilai": 7.1,
-        "satuan": "pH"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Satmoko Yudo dan Nusa Idaman Said",
-      "tahun": 2018,
-      "judul": "Status Kualitas Air Sungai Ciliwung di Wilayah DKI Jakarta - Studi Kasus: Pemasangan Stasiun Online monitoring Kualitas Air di Segmen Kelapa Dua – Masjid Istiqlal",
-      "doi": null
-    }
+// src/data/journalData.js
+// DAFTAR 10 PERTANYAAN EKOLOGIS TERTIMBANG (BERDASARKAN PP NO. 22 TAHUN 2021 & STANDARD WQI)
+
+export const ECOLOGICAL_QUESTIONS = [
+  // ==========================================
+  // KELOMPOK 1: INDIKATOR DO (DISSOLVED OXYGEN)
+  // ==========================================
+  {
+    id: "do_1",
+    category: "DO",
+    weight: 5, // P_i = 5 (Indikator vital kelangsungan hidup biota akuatik)
+    standar_baku_mutu: "Baku Mutu DO Kelas II: Minimum 4.0 mg/L",
+    label: "1. Bagaimana perkiraan kondisi kandungan oksigen terlarut (DO) atau kesegaran air berdasarkan aktivitas organisme air dan kejernihan aliran di lokasi ini?",
+    options: [
+      { value: 20, label: "Air sangat keruh/hitam, berbusa, tidak ada tanda kehidupan ikan (Anoksik < 2.0 mg/L)" },
+      { value: 40, label: "Air nampak tenang mati, ikan terlihat sering megap-megap di permukaan (Hipoksia 2.0 - 3.9 mg/L)" },
+      { value: 60, label: "Kondisi air mengalir biasa, ikan hidup terbatas (Memenuhi Batas Minimum 4.0 - 5.0 mg/L)" },
+      { value: 80, label: "Air mengalir cukup lancar, jernih sedang, organisme aktif (Baik 5.1 - 6.5 mg/L)" },
+      { value: 100, label: "Air mengalir deras, jernih, aerasi sangat baik (Sangat Ideal > 6.5 mg/L)" }
+    ]
   },
   {
-    "id_lokasi": "LOK-002",
-    "nama_sungai": "Sungai Ciliwung",
-    "segmen": "Di bawah TOL Lingkar Luar Jakarta, Cijantung",
-    "koordinat": {
-      "latitude": -6.30618,
-      "longitude": 106.8582
-    },
-    "tahun_penelitian": 2014,
-    "parameter_kimia": {
-      "DO": {
-        "nilai": 3.5,
-        "satuan": "mg/L"
-      },
-      "pH": {
-        "nilai": 6.9,
-        "satuan": "pH"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Satmoko Yudo dan Nusa Idaman Said",
-      "tahun": 2018,
-      "judul": "Status Kualitas Air Sungai Ciliwung di Wilayah DKI Jakarta - Studi Kasus: Pemasangan Stasiun Online monitoring Kualitas Air di Segmen Kelapa Dua – Masjid Istiqlal",
-      "doi": null
-    }
+    id: "do_2",
+    category: "DO",
+    weight: 3, // P_i = 3 (Kekeruhan/Turbiditas & Eutrofikasi)
+    standar_baku_mutu: "Baku Mutu Kekeruhan & Alga (Bebas dari Eutrofikasi Berat)",
+    label: "2. Apa warna air sungai secara kasat mata saat ini?",
+    options: [
+      { value: 20, label: "Hitam pekat, coklat tua keruh pekat, atau mengeluarkan warna kimiawi mencolok" },
+      { value: 40, label: "Coklat keruh atau kehijauan pekat akibat alga berlebih (eutrofikasi)" },
+      { value: 60, label: "Keruh kecoklatan biasa (khas aliran tanah atau lumpur terbawa erosi)" },
+      { value: 80, label: "Agak jernih dengan sedikit kekeruhan ringan" },
+      { value: 100, label: "Sangat jernih alami, dasar sungai dapat terlihat dengan jelas" }
+    ]
   },
   {
-    "id_lokasi": "LOK-003",
-    "nama_sungai": "Sungai Ciliwung",
-    "segmen": "Sebelum pertemuan dengan Sungai Condet, Cililitan, Kramat Jati, Jakarta Timur",
-    "koordinat": {
-      "latitude": -6.2627,
-      "longitude": 106.8592
-    },
-    "tahun_penelitian": 2014,
-    "parameter_kimia": {
-      "DO": {
-        "nilai": 3.5,
-        "satuan": "mg/L"
-      },
-      "pH": {
-        "nilai": 6.9,
-        "satuan": "pH"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Satmoko Yudo dan Nusa Idaman Said",
-      "tahun": 2018,
-      "judul": "Status Kualitas Air Sungai Ciliwung di Wilayah DKI Jakarta - Studi Kasus: Pemasangan Stasiun Online monitoring Kualitas Air di Segmen Kelapa Dua – Masjid Istiqlal",
-      "doi": null
-    }
+    id: "do_3",
+    category: "DO",
+    weight: 3, // P_i = 3 (Indikator Pembusukan Organik / H2S / Senyawa Volatil)
+    standar_baku_mutu: "Baku Mutu Aroma: Tidak Berbau (PP 22/2021)",
+    label: "3. Bagaimana aroma atau bau air sungai di sekitar lokasi pengamatan?",
+    options: [
+      { value: 20, label: "Bau busuk yang sangat menyengat (seperti comberan pekat, belerang, atau limbah kimia)" },
+      { value: 40, label: "Berbau apek atau bau lumpur busuk yang cukup mengganggu" },
+      { value: 60, label: "Tercium sedikit bau lumpur alami atau tidak berbau menyengat" },
+      { value: 80, label: "Berbau netral, tidak ada aroma polutan yang tercium" },
+      { value: 100, label: "Berbau segar khas air alami/pegunungan" }
+    ]
   },
   {
-    "id_lokasi": "LOK-004",
-    "nama_sungai": "Sungai Ciliwung",
-    "segmen": "Jembatan Kalibata, Cililitan, Kramat Jati, Jakarta Timur",
-    "koordinat": {
-      "latitude": -6.2585,
-      "longitude": 106.8604
-    },
-    "tahun_penelitian": 2014,
-    "parameter_kimia": {
-      "DO": {
-        "nilai": 3.4,
-        "satuan": "mg/L"
-      },
-      "pH": {
-        "nilai": 6.9,
-        "satuan": "pH"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Satmoko Yudo dan Nusa Idaman Said",
-      "tahun": 2018,
-      "judul": "Status Kualitas Air Sungai Ciliwung di Wilayah DKI Jakarta - Studi Kasus: Pemasangan Stasiun Online monitoring Kualitas Air di Segmen Kelapa Dua – Masjid Istiqlal",
-      "doi": null
-    }
+    id: "do_4",
+    category: "DO",
+    weight: 4, // P_i = 4 (Bioindikator Keanekaragaman Biota Sensitip Oksigen)
+    standar_baku_mutu: "Baku Mutu Integritas Biotik & Keanekaragaman Spesies",
+    label: "4. Apakah Anda masih melihat ikan lokal yang peka terhadap polusi (seperti mujair, nilem, wader, atau gabus) hidup bebas?",
+    options: [
+      { value: 20, label: "Sama sekali tidak ada ikan lokal sensitif, perairan terlihat 'mati'" },
+      { value: 40, label: "Sangat jarang, hanya terlihat satu-dua ekor ikan kecil dalam kondisi lemah" },
+      { value: 60, label: "Ikan lokal mulai terlihat sesekali di bagian aliran yang agak deras" },
+      { value: 80, label: "Ikan lokal cukup banyak ditemukan dan hidup aktif bergerombol" },
+      { value: 100, label: "Keanekaragaman ikan lokal sangat tinggi dan berkembang biak dengan sehat" }
+    ]
   },
   {
-    "id_lokasi": "LOK-005",
-    "nama_sungai": "Sungai Ciliwung",
-    "segmen": "Setelah Pintu Air Manggarai arah Istiqlal, Pegangsaan, Menteng, Jakarta Pusat",
-    "koordinat": {
-      "latitude": -6.2077,
-      "longitude": 106.8491
-    },
-    "tahun_penelitian": 2014,
-    "parameter_kimia": {
-      "DO": {
-        "nilai": 3.4,
-        "satuan": "mg/L"
-      },
-      "pH": {
-        "nilai": 6.6,
-        "satuan": "pH"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Satmoko Yudo dan Nusa Idaman Said",
-      "tahun": 2018,
-      "judul": "Status Kualitas Air Sungai Ciliwung di Wilayah DKI Jakarta - Studi Kasus: Pemasangan Stasiun Online monitoring Kualitas Air di Segmen Kelapa Dua – Masjid Istiqlal",
-      "doi": null
-    }
+    id: "do_5",
+    category: "DO",
+    weight: 4, // P_i = 4 (Beban Penurunan Oksigen akibat Beban Organik BOD/COD)
+    standar_baku_mutu: "Baku Mutu BOD: Maks 3 mg/L | COD: Maks 25 mg/L",
+    label: "5. Bagaimana tingkat pencemaran limbah organik rumah tangga atau sampah domestik yang menumpuk di badan air?",
+    options: [
+      { value: 20, label: "Sampah organik menumpuk sangat padat dan air limbah cucian pekat langsung masuk" },
+      { value: 40, label: "Banyak tumpukan sampah domestik di pinggiran dan air keruh akibat limbah cair rumah tangga" },
+      { value: 60, label: "Terdapat sedikit sampah rumah tangga di beberapa titik" },
+      { value: 80, label: "Minim sampah rumah tangga, aliran air cukup bersih dari hambatan organik" },
+      { value: 100, label: "Bersih total dari sampah domestik maupun limbah organik buangan warga" }
+    ]
+  },
+
+  // ==========================================
+  // KELOMPOK 2: INDIKATOR LOGAM BERAT & TOKSIKITAS
+  // ==========================================
+  {
+    id: "metal_1",
+    category: "LOGAM",
+    weight: 5, // P_i = 5 (Toksisitas Timbal / Pb sangat berbahaya bagi saraf & organ)
+    standar_baku_mutu: "Baku Mutu Timbal (Pb) Kelas II: Maksimum 0.03 mg/L",
+    label: "6. Apakah terdapat aktivitas di sekitar perairan yang berpotensi tinggi menyumbangkan limbah Logam Timbal (Pb) seperti bengkel cat/kendaraan, percetakan, atau buangan aki bekas?",
+    options: [
+      { value: 20, label: "Sangat banyak industri/bengkel/pembuangan limbah cat dan aki langsung ke sungai (> 0.03 mg/L)" },
+      { value: 40, label: "Ada beberapa aktivitas bengkel atau lalu lintas padat yang air cecerannya mengalir ke sungai" },
+      { value: 60, label: "Aktivitas pencemar Pb tergolong sedang atau berjarak agak jauh dari sempadan sungai" },
+      { value: 80, label: "Hanya sedikit atau hampir tidak ada aktivitas yang menghasilkan limbah Pb" },
+      { value: 100, label: "Sama sekali tidak ada aktivitas manusia yang berpotensi mencemari Pb (Steril/Konservasi)" }
+    ]
   },
   {
-    "id_lokasi": "LOK-006",
-    "nama_sungai": "Sungai Ciliwung",
-    "segmen": "Setelah Outlet RS Cipto Mangunkusumo (RSCM), Kenari, Senen, Jakarta Pusat",
-    "koordinat": {
-      "latitude": -6.19707,
-      "longitude": 106.84547
-    },
-    "tahun_penelitian": 2014,
-    "parameter_kimia": {
-      "DO": {
-        "nilai": 2.8,
-        "satuan": "mg/L"
-      },
-      "pH": {
-        "nilai": 6.8,
-        "satuan": "pH"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Satmoko Yudo dan Nusa Idaman Said",
-      "tahun": 2018,
-      "judul": "Status Kualitas Air Sungai Ciliwung di Wilayah DKI Jakarta - Studi Kasus: Pemasangan Stasiun Online monitoring Kualitas Air di Segmen Kelapa Dua – Masjid Istiqlal",
-      "doi": null
-    }
+    id: "metal_2",
+    category: "LOGAM",
+    weight: 5, // P_i = 5 (Kadmium / Cd beracun bagi ginjal & sistem akut)
+    standar_baku_mutu: "Baku Mutu Kadmium (Cd) Kelas II: Maksimum 0.01 mg/L",
+    label: "7. Bagaimana intensitas penggunaan pupuk kimia/pestisida di lahan pertanian atau aktivitas industri pelapisan logam/tekstil di sekitar aliran sungai ini yang memicu cemaran Kadmium (Cd)?",
+    options: [
+      { value: 20, label: "Sungai dikelilingi pertanian intensif pestisida tinggi atau pabrik tekstil/galvanis tanpa olah limbah" },
+      { value: 40, label: "Terdapat aktivitas pertanian atau industri menengah yang cukup sering mengalirkan drainase ke sungai" },
+      { value: 60, label: "Aktivitas pertanian ada namun dalam skala kecil/terbatas" },
+      { value: 80, label: "Aktivitas pertanian organik atau minim penggunaan bahan kimia sintetis" },
+      { value: 100, label: "Bebas dari aktivitas pertanian intensif maupun industri yang menghasilkan Kadmium" }
+    ]
   },
   {
-    "id_lokasi": "LOK-007",
-    "nama_sungai": "Sungai Ciliwung",
-    "segmen": "Jembatan Masjid Istiqlal, Kebon Kelapa, Gambir, Jakarta Pusat",
-    "koordinat": {
-      "latitude": -6.17140,
-      "longitude": 106.83108
-    },
-    "tahun_penelitian": 2014,
-    "parameter_kimia": {
-      "DO": {
-        "nilai": 2,
-        "satuan": "mg/L"
-      },
-      "pH": {
-        "nilai": 7.5,
-        "satuan": "pH"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Satmoko Yudo dan Nusa Idaman Said",
-      "tahun": 2018,
-      "judul": "Status Kualitas Air Sungai Ciliwung di Wilayah DKI Jakarta - Studi Kasus: Pemasangan Stasiun Online monitoring Kualitas Air di Segmen Kelapa Dua – Masjid Istiqlal",
-      "doi": null
-    }
+    id: "metal_3",
+    category: "LOGAM",
+    weight: 5, // P_i = 5 (Merkuri / Hg toksisitas tertinggi, bioakumulasi tinggi)
+    standar_baku_mutu: "Baku Mutu Merkuri (Hg) Kelas II: Maksimum 0.002 mg/L",
+    label: "8. Apakah terdapat indikasi aktivitas penambangan (seperti penambangan emas tanpa izin/PSTI), pembuangan limbah medis/laboratorium, atau sampah elektronik di sekitar lokasi?",
+    options: [
+      { value: 20, label: "Sangat kuat indikasi aktivitas penambangan liar/limbah elektronik/medis langsung di badan air" },
+      { value: 40, label: "Terdapat aktivitas yang berpotensi menyumbang merkuri di wilayah hulu atau sekitar lokasi" },
+      { value: 60, label: "Potensi pencemaran Hg kecil, namun ada pembuangan sampah rumah tangga campuran" },
+      { value: 80, label: "Lingkungan sekitar bersih dari aktivitas tambang atau limbah berbahaya spesifik" },
+      { value: 100, label: "Sangat steril dari segala bentuk aktivitas yang berisiko mencemari merkuri" }
+    ]
   },
   {
-    "id_lokasi": "LOK-008",
-    "nama_sungai": "Sungai Ciliwung",
-    "segmen": "Jakarta (lokasi spesifik tidak dilaporkan dalam sumber yang tersedia)",
-    "koordinat": {
-      "latitude": null,
-      "longitude": null
-    },
-    "tahun_penelitian": null,
-    "parameter_kimia": {
-      "DO": {
-        "nilai": null,
-        "satuan": "mg/L",
-        "status": "tidak dilaporkan"
-      },
-      "pH": {
-        "nilai": null,
-        "satuan": "pH",
-        "status": "tidak dilaporkan"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": 0.03, "satuan": "mg/L" },
-        "Hg": { "nilai": 0.001, "satuan": "mg/L" },
-        "Cd": { "nilai": 0.005, "satuan": "mg/L" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Aprilia et al., 2022 (dikutip dalam Afifudin, Wulandari, & Irawanto, 2024)",
-      "tahun": 2022,
-      "judul": "Water Quality Status Based On Pollution Index and Water Quality Index of Ciliwung River, DKI Jakarta Province (dikutip dari: Pencemaran Logam Berat di Air, Sedimen, dan Organisme pada Beberapa Sungai di Pulau Jawa, Indonesia: Tinjauan Literatur)",
-      "doi": null
-    }
+    id: "metal_4",
+    category: "LOGAM",
+    weight: 4, // P_i = 4 (Akumulasi Logam Berat pada Sedimen Lumpur Dasar)
+    standar_baku_mutu: "Baku Mutu Sedimen & Kualitas Lumpur Perairan Dasar",
+    label: "9. Bagaimana kondisi fisik dasar sungai (sedimen/lumpur) tempat ikan sapu-sapu mencari makan dan tempat mengendapnya logam berat?",
+    options: [
+      { value: 20, label: "Lumpur dasar sangat tebal, hitam pekat, dan berbau busuk menyengat (Endapan polutan tinggi)" },
+      { value: 40, label: "Dasar sungai dipenuhi lumpur kecoklatan dengan endapan sampah organik yang cukup banyak" },
+      { value: 60, label: "Dasar perairan bercampur antara lumpur, pasir, dan sedikit batuan" },
+      { value: 80, label: "Dasar sungai didominasi oleh pasir dan bebatuan kecil dengan sedikit lumpur" },
+      { value: 100, label: "Dasar sungai bersih, berbatu, berpasir, dan aliran air lancar tanpa endapan lumpur tercemar" }
+    ]
   },
   {
-    "id_lokasi": "LOK-009",
-    "nama_sungai": "Jatiluhur",
-    "segmen": "Waduk Jatiluhur - bagian Hulu, Kabupaten Purwakarta, Jawa Barat",
-    "koordinat": {
-      "latitude": -6.5314280,
-      "longitude": 107.3709016
-    },
-    "tahun_penelitian": null,
-    "parameter_kimia": {
-      "DO": {
-        "nilai": 6.00,
-        "satuan": "mg/L"
-      },
-      "pH": {
-        "nilai": 7.51,
-        "satuan": "pH"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak terdeteksi" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak terdeteksi" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Gina Lova Sari, Kusnadi, Aulia Fashanah Hadining, Hadi Sudarjat",
-      "tahun": 2020,
-      "judul": "Analisis Karakteristik Fisik-Kimiawi Air Daerah Aliran Sungai Citarum di Waduk Jatiluhur",
-      "doi": null
-    }
-  },
-  {
-    "id_lokasi": "LOK-010",
-    "nama_sungai": "Jatiluhur",
-    "segmen": "Waduk Jatiluhur - bagian Tengah, Kabupaten Purwakarta, Jawa Barat",
-    "koordinat": {
-      "latitude": -6.5747688,
-      "longitude": 107.3015802
-    },
-    "tahun_penelitian": null,
-    "parameter_kimia": {
-      "DO": {
-        "nilai": 6.31,
-        "satuan": "mg/L"
-      },
-      "pH": {
-        "nilai": 7.60,
-        "satuan": "pH"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak terdeteksi" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak terdeteksi" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Gina Lova Sari, Kusnadi, Aulia Fashanah Hadining, Hadi Sudarjat",
-      "tahun": 2020,
-      "judul": "Analisis Karakteristik Fisik-Kimiawi Air Daerah Aliran Sungai Citarum di Waduk Jatiluhur",
-      "doi": null
-    }
-  },
-  {
-    "id_lokasi": "LOK-011",
-    "nama_sungai": "Jatiluhur",
-    "segmen": "Waduk Jatiluhur - bagian Hilir, Kabupaten Purwakarta, Jawa Barat",
-    "koordinat": {
-      "latitude": -6.5981811,
-      "longitude": 107.3001241
-    },
-    "tahun_penelitian": null,
-    "parameter_kimia": {
-      "DO": {
-        "nilai": 6.55,
-        "satuan": "mg/L"
-      },
-      "pH": {
-        "nilai": 7.81,
-        "satuan": "pH"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak terdeteksi" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak terdeteksi" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Gina Lova Sari, Kusnadi, Aulia Fashanah Hadining, Hadi Sudarjat",
-      "tahun": 2020,
-      "judul": "Analisis Karakteristik Fisik-Kimiawi Air Daerah Aliran Sungai Citarum di Waduk Jatiluhur",
-      "doi": null
-    }
-  },
-  {
-    "id_lokasi": "LOK-012",
-    "nama_sungai": "Jatiluhur",
-    "segmen": "Waduk Jatiluhur - Stasiun Karamba, Kabupaten Purwakarta, Jawa Barat",
-    "koordinat": {
-      "latitude": null,
-      "longitude": null
-    },
-    "tahun_penelitian": "2020-2021",
-    "parameter_kimia": {
-      "DO": {
-        "nilai": 4.2,
-        "satuan": "mg/L"
-      },
-      "pH": {
-        "nilai": 8,
-        "satuan": "pH"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Melly Mellyanawaty, Siti Nurhalimah, Estin Nofiyanti",
-      "tahun": 2024,
-      "judul": "Penentuan Mutu Air Waduk Jatiluhur Jawa Barat dengan Metode IP, Storet, CCME WQI sebagai Dampak Keramba Jaring Apung",
-      "doi": null
-    }
-  },
-  {
-    "id_lokasi": "LOK-013",
-    "nama_sungai": "Jatiluhur",
-    "segmen": "Waduk Jatiluhur - Stasiun Kerenceng, Kabupaten Purwakarta, Jawa Barat",
-    "koordinat": {
-      "latitude": null,
-      "longitude": null
-    },
-    "tahun_penelitian": "2020-2021",
-    "parameter_kimia": {
-      "DO": {
-        "nilai": 2.6,
-        "satuan": "mg/L"
-      },
-      "pH": {
-        "nilai": 5.6,
-        "satuan": "pH"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Melly Mellyanawaty, Siti Nurhalimah, Estin Nofiyanti",
-      "tahun": 2024,
-      "judul": "Penentuan Mutu Air Waduk Jatiluhur Jawa Barat dengan Metode IP, Storet, CCME WQI sebagai Dampak Keramba Jaring Apung",
-      "doi": null
-    }
-  },
-  {
-    "id_lokasi": "LOK-014",
-    "nama_sungai": "Jatiluhur",
-    "segmen": "Waduk Jatiluhur - Stasiun Taroko, Kabupaten Purwakarta, Jawa Barat",
-    "koordinat": {
-      "latitude": null,
-      "longitude": null
-    },
-    "tahun_penelitian": "2020-2021",
-    "parameter_kimia": {
-      "DO": {
-        "nilai": 3.5,
-        "satuan": "mg/L"
-      },
-      "pH": {
-        "nilai": 7.6,
-        "satuan": "pH"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Melly Mellyanawaty, Siti Nurhalimah, Estin Nofiyanti",
-      "tahun": 2024,
-      "judul": "Penentuan Mutu Air Waduk Jatiluhur Jawa Barat dengan Metode IP, Storet, CCME WQI sebagai Dampak Keramba Jaring Apung",
-      "doi": null
-    }
-  },
-  {
-    "id_lokasi": "LOK-015",
-    "nama_sungai": "Jatiluhur",
-    "segmen": "Waduk Jatiluhur - Stasiun Parung Kalong, Kabupaten Purwakarta, Jawa Barat",
-    "koordinat": {
-      "latitude": null,
-      "longitude": null
-    },
-    "tahun_penelitian": "2020-2021",
-    "parameter_kimia": {
-      "DO": {
-        "nilai": 2,
-        "satuan": "mg/L"
-      },
-      "pH": {
-        "nilai": 10.2,
-        "satuan": "pH"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Melly Mellyanawaty, Siti Nurhalimah, Estin Nofiyanti",
-      "tahun": 2024,
-      "judul": "Penentuan Mutu Air Waduk Jatiluhur Jawa Barat dengan Metode IP, Storet, CCME WQI sebagai Dampak Keramba Jaring Apung",
-      "doi": null
-    }
-  },
-  {
-    "id_lokasi": "LOK-016",
-    "nama_sungai": "Jatiluhur",
-    "segmen": "Waduk Jatiluhur - Stasiun Cilalawi, Kabupaten Purwakarta, Jawa Barat",
-    "koordinat": {
-      "latitude": null,
-      "longitude": null
-    },
-    "tahun_penelitian": "2020-2021",
-    "parameter_kimia": {
-      "DO": {
-        "nilai": 2.6,
-        "satuan": "mg/L"
-      },
-      "pH": {
-        "nilai": 6.3,
-        "satuan": "pH"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Melly Mellyanawaty, Siti Nurhalimah, Estin Nofiyanti",
-      "tahun": 2024,
-      "judul": "Penentuan Mutu Air Waduk Jatiluhur Jawa Barat dengan Metode IP, Storet, CCME WQI sebagai Dampak Keramba Jaring Apung",
-      "doi": null
-    }
-  },
-  {
-    "id_lokasi": "LOK-017",
-    "nama_sungai": "Sungai Brantas",
-    "segmen": "Kediri, Jawa Timur",
-    "koordinat": {
-      "latitude": null,
-      "longitude": null
-    },
-    "tahun_penelitian": null,
-    "parameter_kimia": {
-      "DO": {
-        "nilai": null,
-        "satuan": "mg/L",
-        "status": "tidak dilaporkan"
-      },
-      "pH": {
-        "nilai": null,
-        "satuan": "pH",
-        "status": "tidak dilaporkan"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": 0.25, "satuan": "mg/L" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak dilaporkan" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak dilaporkan" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Sidjabat et al., 2020 (dikutip dalam Afifudin, Wulandari, & Irawanto, 2024)",
-      "tahun": 2020,
-      "judul": "Pengukuran Timbal pada Air Sungai dan Bioindikator Lokal di Sungai Brantas Kota Kediri, Provinsi Jawa Timur (dikutip dari: Pencemaran Logam Berat di Air, Sedimen, dan Organisme pada Beberapa Sungai di Pulau Jawa, Indonesia: Tinjauan Literatur)",
-      "doi": null
-    }
-  },
-  {
-    "id_lokasi": "LOK-018",
-    "nama_sungai": "Sungai Musi",
-    "segmen": "Bagian hilir hingga muara (agregat 8 stasiun: sekitar Jembatan Ampera–PT Pusri, Upang, dan Sungsang), Sumatera Selatan",
-    "koordinat": {
-      "latitude": null,
-      "longitude": null
-    },
-    "tahun_penelitian": 2014,
-    "parameter_kimia": {
-      "DO": {
-        "nilai": null,
-        "satuan": "mg/L",
-        "status": "tidak diteliti"
-      },
-      "pH": {
-        "nilai": null,
-        "satuan": "pH",
-        "status": "tidak diteliti"
-      },
-      "logam_berat": {
-        "Pb": {
-          "nilai_min": 0.002,
-          "nilai_max": 0.003,
-          "satuan": "mg/L",
-          "keterangan": "Pb terlarut, periode Maret 2014, rentang gabungan dari 8 stasiun"
-        },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Wike Ayu Eka Putri, Dietriech G Bengen, Tri Prartono, Etty Riani",
-      "tahun": 2015,
-      "judul": "Konsentrasi Logam Berat (Cu dan Pb) di Sungai Musi Bagian Hilir",
-      "doi": null
-    }
-  },
-  {
-    "id_lokasi": "LOK-019",
-    "nama_sungai": "Sungai Musi",
-    "segmen": "Bagian hilir hingga muara (agregat 8 stasiun: sekitar Jembatan Ampera–PT Pusri, Upang, dan Sungsang), Sumatera Selatan",
-    "koordinat": {
-      "latitude": null,
-      "longitude": null
-    },
-    "tahun_penelitian": 2014,
-    "parameter_kimia": {
-      "DO": {
-        "nilai": null,
-        "satuan": "mg/L",
-        "status": "tidak diteliti"
-      },
-      "pH": {
-        "nilai": null,
-        "satuan": "pH",
-        "status": "tidak diteliti"
-      },
-      "logam_berat": {
-        "Pb": {
-          "nilai_min": 0.001,
-          "nilai_max": 0.005,
-          "satuan": "mg/L",
-          "keterangan": "Pb terlarut, periode September 2014, rentang gabungan dari 8 stasiun"
-        },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Wike Ayu Eka Putri, Dietriech G Bengen, Tri Prartono, Etty Riani",
-      "tahun": 2015,
-      "judul": "Konsentrasi Logam Berat (Cu dan Pb) di Sungai Musi Bagian Hilir",
-      "doi": null
-    }
-  },
-  {
-    "id_lokasi": "LOK-020",
-    "nama_sungai": "Sungai Bengawan Solo",
-    "segmen": "Stasiun KLHK60, Rusunawa Jurug, Jebres, Kota Surakarta (hulu), Jawa Tengah",
-    "koordinat": {
-      "latitude": null,
-      "longitude": null
-    },
-    "tahun_penelitian": 2024,
-    "parameter_kimia": {
-      "DO": {
-        "nilai": null,
-        "satuan": "mg/L",
-        "status": "tidak dilaporkan",
-        "keterangan": "Hanya indeks pencemaran DO (0,28%) yang dilaporkan, bukan nilai konsentrasi aktual"
-      },
-      "pH": {
-        "nilai": null,
-        "satuan": "pH",
-        "status": "tidak dilaporkan",
-        "keterangan": "Hanya indeks pencemaran pH (0,21%) yang dilaporkan, bukan nilai pH aktual"
-      },
-      "logam_berat": {
-        "Pb": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Hg": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" },
-        "Cd": { "nilai": null, "satuan": "mg/L", "status": "tidak diteliti" }
-      }
-    },
-    "sumber_jurnal": {
-      "penulis": "Uci Sulandari, Yunitasari Purba, Boy Jely Marsito, Hardini, Muhammad Iza Hattaya, Nada Aqeel Faiz, Yudit Alfianto",
-      "tahun": 2025,
-      "judul": "Penentuan Status Mutu Air Sungai Bengawan Solo Menggunakan Teknologi Online Monitoring (Onlimo) Pada Stasiun Klhk 60 Jurug Jebres Kota Surakarta, Jawa Tengah",
-      "doi": "https://doi.org/10.38035/jim.v3i4"
-    }
+    id: "metal_5",
+    category: "LOGAM",
+    weight: 4, // P_i = 4 (Bioindikator Dominansi Spesies Invasi Tahan Logam Berat)
+    standar_baku_mutu: "Baku Mutu Keseimbangan Ekosistem & Bio-akumulator",
+    label: "10. Bagaimana tingkat populasi atau keberadaan ikan sapu-sapu di lokasi pengamatan ini?",
+    options: [
+      { value: 20, label: "Ikan sapu-sapu melimpah ruah dan mendominasi total biomassa (Tanda perairan tercemar/kritis)" },
+      { value: 40, label: "Populasi ikan sapu-sapu cukup banyak dan mudah ditemukan di setiap sudut sungai" },
+      { value: 60, label: "Populasi ikan sapu-sapu ada dalam jumlah sedang, bercampur dengan spesies lain" },
+      { value: 80, label: "Populasi ikan sapu-sapu jarang ditemukan dan hanya di titik tertentu" },
+      { value: 100, label: "Ikan sapu-sapu hampir tidak ditemukan (Kondisi perairan sangat bersih / alami)" }
+    ]
   }
-]
+];

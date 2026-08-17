@@ -1,11 +1,8 @@
+// Duplicate code 2
+
 import React, { useState, useRef, useEffect } from "react";
-
-{
-  /* import { rivers } from '../data/riverData'; */
-}
-
 import { supabase } from "../supabaseClient";
-import { JOURNAL_DATA } from "../data/journalData";
+import { ECOLOGICAL_QUESTIONS } from "../data/journalData";
 import {
   MapContainer,
   TileLayer,
@@ -29,6 +26,7 @@ import {
   X,
   Image as ImageIcon,
   Crosshair,
+  ShieldAlert,
 } from "lucide-react";
 
 // Data Koordinat Vektor Sungai Jakarta
@@ -96,16 +94,15 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-// Daftar Nama Sungai Umum
 const RIVERS_LIST = [
   "Sungai Ciliwung",
   "Sungai Cisadane",
   "Kali Pesanggrahan",
   "Kali Sunter",
   "Kali Angke",
+  "Lainnya"
 ];
 
-// Daftar Nama Sungai Umum
 const TYPE_USER = [
   "Masyarakat Umum",
   "Instansi Pemerintah",
@@ -113,7 +110,6 @@ const TYPE_USER = [
   "Komunitas Lingkungan",
 ];
 
-// Helper Component untuk Menggeser Tampilan Peta
 function MapRecenter({ lat, lng }) {
   const map = useMap();
   useEffect(() => {
@@ -124,7 +120,6 @@ function MapRecenter({ lat, lng }) {
   return null;
 }
 
-// Helper Component untuk Menangani Klik/Drag Marker
 function LocationPickerMarker({ position, setPosition }) {
   useMapEvents({
     click(e) {
@@ -147,107 +142,21 @@ function LocationPickerMarker({ position, setPosition }) {
   ) : null;
 }
 
-// Indikator Evaluasi Ekologis
-const ECOLOGICAL_INDICATORS = [
-  {
-    id: "ind1",
-    label: "1. Kepadatan Ikan Sapu-Sapu (Bioindikator Utama):",
-    description:
-      "Bagaimana tingkat populasi/keberadaan ikan sapu-sapu di lokasi ini?",
-    options: [
-      { value: 1, label: "Tidak ada sama sekali / Sangat jarang" },
-      {
-        value: 3,
-        label: "Ada beberapa, tetapi bercampur seimbang dengan jenis ikan lain",
-      },
-      {
-        value: 5,
-        label: "Sangat mendominasi, hampir tidak terlihat jenis ikan lain",
-      },
-    ],
-  },
-  {
-    id: "ind2",
-    label: "2. Keberadaan Ikan Lokal (Bioindikator Sensitif):",
-    description:
-      "Apakah Anda masih melihat ikan lokal (seperti mujair, nilem, wader, atau gabus) hidup bebas?",
-    options: [
-      { value: 1, label: "Ya, masih banyak dan bervariasi" },
-      { value: 3, label: "Jarang sekali terlihat" },
-      {
-        value: 5,
-        label: "Tidak ada sama sekali / Sudah tidak ditemukan di titik ini",
-      },
-    ],
-  },
-  {
-    id: "ind3",
-    label: "3. Warna Air (Indikator Fisik):",
-    description: "Apa warna air sungai secara kasat mata saat ini?",
-    options: [
-      {
-        value: 1,
-        label: "Jernih atau kecokelatan alami (lumpur sungai normal)",
-      },
-      {
-        value: 3,
-        label: "Keruh keputihan (tampak seperti sisa air sabun/detergen)",
-      },
-      { value: 5, label: "Hitam pekat atau hijau gelap berlendir" },
-    ],
-  },
-  {
-    id: "ind4",
-    label: "4. Bau Air (Indikator Fisik):",
-    description:
-      "Bagaimana aroma atau bau air sungai di sekitar lokasi pengamatan?",
-    options: [
-      { value: 1, label: "Tidak berbau / Alami" },
-      { value: 3, label: "Berbau kurang sedap / Apek saat angin berembus" },
-      {
-        value: 5,
-        label: "Berbau sangat menyengat (seperti busuk, got, atau bahan kimia)",
-      },
-    ],
-  },
-  {
-    id: "ind5",
-    label: "5. Sumber Polutan Sekitar (Indikator Aktivitas):",
-    description:
-      "Apa aktivitas pembuangan limbah terdekat yang paling menonjol?",
-    options: [
-      { value: 1, label: "Tidak ada buangan limbah langsung" },
-      { value: 3, label: "Banyak tumpukan sampah domestik / rumah tangga" },
-      {
-        value: 5,
-        label:
-          "Ada pipa pembuangan langsung dari pabrik, bengkel, atau industri",
-      },
-    ],
-  },
-];
-
 export default function Report() {
-  // Identitas & Info Umum
   const [nama, setNama] = useState("");
-  const [selectedUserKategori, setSelectedUserKategori] = useState("");
-  const [customTypeUser, setCustomTypeUser] = useState("");
-
+  const [selectedUserKategori, setSelectedUserKategori] = useState([]);
   const [judul, setJudul] = useState("");
   const [wilayah, setWilayah] = useState("");
   const [waktuPengamatan, setWaktuPengamatan] = useState("");
 
-  // Pilihan Sungai & Koordinat
   const [selectedRiverName, setSelectedRiverName] = useState("");
   const [customRiverName, setCustomRiverName] = useState("");
   const [markerPosition, setMarkerPosition] = useState([-6.204043, 106.812515]);
   const [gettingLocation, setGettingLocation] = useState(false);
 
-  // Jurnal Rujukan
   const [selectedLokasiId, setSelectedLokasiId] = useState("");
   const [selectedJournal, setSelectedJournal] = useState(null);
 
-  // Parameter Kimia Terisi Otomatis
   const [journalParams, setJournalParams] = useState({
     ph: "-",
     do_value: "-",
@@ -256,27 +165,21 @@ export default function Report() {
     cd: "-",
   });
 
-  // Indikator Evaluasi Ekologis (Default Kosong/Unselected untuk Memaksa User Memilih)
+  // State untuk menyimpan jawaban 10 soal
   const [scores, setScores] = useState({
-    ind1: "",
-    ind2: "",
-    ind3: "",
-    ind4: "",
-    ind5: "",
+    do_1: "", do_2: "", do_3: "", do_4: "", do_5: "",
+    metal_1: "", metal_2: "", metal_3: "", metal_4: "", metal_5: ""
   });
 
-  // Media & Catatan
   const [keteranganEkologis, setKeteranganEkologis] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [agreed, setAgreed] = useState(false);
 
-  // UI State
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
   const fileInputRef = useRef(null);
 
-  // Preview Image Handler
   useEffect(() => {
     if (!selectedFile) {
       setPreviewUrl(null);
@@ -291,53 +194,93 @@ export default function Report() {
     }
   }, [selectedFile]);
 
-  // Total Skor Ekologis
-  const totalSkor = Object.values(scores).reduce(
-    (a, b) => Number(a || 0) + Number(b || 0),
-    0,
-  );
+// --- KALKULASI PRESI WQI TERTIMBANG (BERDASARKAN WEIGHT Pi & SKOR Ci) ---
+const calculateWeightedSubIndex = (category) => {
+  const filteredQuestions = ECOLOGICAL_QUESTIONS.filter((q) => q.category === category);
+  
+  let totalCiPi = 0;
+  let totalPi = 0;
 
-  const getStatusKualitas = (score) => {
-    if (score === 0)
+  filteredQuestions.forEach((q) => {
+    const val = Number(scores[q.id] || 0);
+    if (val > 0) {
+      const Ci = val;        // Skor opsi jawaban (20 - 100)
+      const Pi = q.weight;   // Bobot indikator (3 - 5)
+      
+      totalCiPi += Ci * Pi;
+      totalPi += Pi;
+    }
+  });
+
+  if (totalPi === 0) return 0;
+  return Math.round(totalCiPi / totalPi);
+};
+
+// Hitung Sub-Indeks Persisi masing-masing kategori
+const subIndexDO = calculateWeightedSubIndex("DO");
+const subIndexMetal = calculateWeightedSubIndex("LOGAM");
+
+// Hitung WQI Total gabungan tertimbang dari seluruh 10 indikator
+const calculateTotalWQI = () => {
+  let totalCiPi = 0;
+  let totalPi = 0;
+
+  ECOLOGICAL_QUESTIONS.forEach((q) => {
+    const val = Number(scores[q.id] || 0);
+    if (val > 0) {
+      totalCiPi += val * q.weight;
+      totalPi += q.weight;
+    }
+  });
+
+  if (totalPi === 0) return 0;
+  return Math.round(totalCiPi / totalPi);
+};
+
+const totalWQI = calculateTotalWQI();
+
+  const getWQIStatus = (wqi) => {
+    const isFilled = Object.values(scores).every((val) => val !== "");
+    if (!isFilled) {
       return {
         label: "Belum Lengkap",
         color: "#9CA3AF",
         badge: "bg-gray-100 text-gray-700 border-gray-300",
       };
-    if (score <= 9)
+    }
+    if (wqi >= 81) {
       return {
         label: "Sangat Baik (Kondisi Alami)",
-        color: "#10B981",
+        color: "#22C55E",
         badge: "bg-emerald-100 text-emerald-800 border-emerald-300",
       };
-    if (score <= 15)
+    }
+    if (wqi >= 51) {
       return {
-        label: "Tercemar Ringan (Perlu Pengawasan)",
-        color: "#FBBF24",
+        label: "Baik / Tercemar Ringan",
+        color: "#EAB308",
         badge: "bg-amber-100 text-amber-800 border-amber-300",
       };
-    if (score <= 20)
+    }
+    if (wqi >= 26) {
       return {
-        label: "Tercemar Sedang (Perlu Konservasi)",
+        label: "Cukup / Tercemar Sedang",
         color: "#F97316",
         badge: "bg-orange-100 text-orange-800 border-orange-300",
       };
+    }
     return {
-      label: "Tercemar Berat (Kondisi Kritis / Bahaya)",
+      label: "Buruk / Tercemar Berat",
       color: "#EF4444",
       badge: "bg-red-100 text-red-800 border-red-300",
     };
   };
 
-  const statusObj = getStatusKualitas(totalSkor);
+  const statusObj = getWQIStatus(totalWQI);
 
-  // Helper Verifikasi Lokasi Perairan via Overpass API (Teroptimasi)
   const checkIfOnWater = async (lat, lng) => {
-    // 1. Abort Controller untuk cegah hang (timeout 5 detik)
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-    // 2. Perbesar delta menjadi 0.1500 (~15 km radius) agar toleransi jauh lebih luas
     const delta = 0.15;
 
     const query = `
@@ -355,56 +298,19 @@ export default function Report() {
       const res = await fetch("https://overpass-api.de/api/interpreter", {
         method: "POST",
         body: "data=" + encodeURIComponent(query),
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
         signal: controller.signal,
       });
 
       clearTimeout(timeoutId);
-
-      if (!res.ok) {
-        throw new Error(`Server Overpass bermasalah (Status: ${res.status})`);
-      }
-
+      if (!res.ok) throw new Error("Overpass API error");
       const data = await res.json();
-
-      // Jika ada elemen perairan/sungai terdeteksi di koordinat tersebut
-      const isWater = data.elements && data.elements.length > 0;
-
-      // Jika Overpass mendeteksi air atau mendekati area perairan, kembalikan true
-      if (isWater) return true;
-
-      // Jika Overpass kosong, fallback ke pengecekan lokal dengan toleransi lebih luas
-      if (
-        typeof isPointNearRiver === "function" &&
-        typeof rivers !== "undefined"
-      ) {
-        return isPointNearRiver(lat, lng, rivers, 20.0); // Toleransi diperbesar jadi 20 km
-      }
-
-      // Jika tetap tidak ditemukan, berikan kelonggaran true agar form bisa tetap disubmit
-      return true;
+      return data.elements && data.elements.length > 0;
     } catch (err) {
-      console.warn(
-        "Validasi Overpass API gagal/timeout, menggunakan fallback:",
-        err.message,
-      );
-
-      // 3. FALLBACK AMAN: Perbesar toleransi jarak lokal menjadi 20.0 km
-      if (
-        typeof isPointNearRiver === "function" &&
-        typeof rivers !== "undefined"
-      ) {
-        return isPointNearRiver(lat, lng, rivers, 20.0);
-      }
-
-      // Kelonggaran terakhir agar form tidak memblokir pengiriman data saat offline/timeout
-      return true;
+      return true; // Fallback jika timeout/offline
     }
   };
 
-  // Ambil Lokasi GPS Perangkat
   const handleGetCurrentLocation = () => {
     if (!navigator.geolocation) {
       alert("Geolocation tidak didukung oleh browser Anda.");
@@ -418,41 +324,28 @@ export default function Report() {
         setGettingLocation(false);
       },
       (err) => {
-        console.error(err);
-        alert(
-          "Gagal mengambil lokasi. Pastikan GPS aktif dan izin akses diberikan.",
-        );
+        alert("Gagal mengambil lokasi. Pastikan GPS aktif.");
         setGettingLocation(false);
       },
-      { enableHighAccuracy: true },
+      { enableHighAccuracy: true }
     );
   };
 
-  // Handler Pilihan Jurnal
   const handleJournalSelect = (e) => {
     const id = e.target.value;
     setSelectedLokasiId(id);
 
-    const journal = JOURNAL_DATA.find((item) => item.id_lokasi === id);
+    const journal = ECOLOGICAL_QUESTIONS.find((item) => item.id_lokasi === id);
     if (journal) {
       setSelectedJournal(journal);
       const params = journal.parameter_kimia;
-      const pbVal =
-        params.logam_berat?.Pb?.nilai ??
-        params.logam_berat?.Pb?.nilai_min ??
-        null;
+      const pbVal = params.logam_berat?.Pb?.nilai ?? params.logam_berat?.Pb?.nilai_min ?? null;
       const hgVal = params.logam_berat?.Hg?.nilai ?? null;
       const cdVal = params.logam_berat?.Cd?.nilai ?? null;
 
       setJournalParams({
-        ph:
-          params.pH?.nilai !== undefined && params.pH?.nilai !== null
-            ? `${params.pH.nilai} ${params.pH.satuan || ""}`
-            : "Tidak diteliti",
-        do_value:
-          params.DO?.nilai !== undefined && params.DO?.nilai !== null
-            ? `${params.DO.nilai} ${params.DO.satuan || ""}`
-            : "Tidak diteliti",
+        ph: params.pH?.nilai ? `${params.pH.nilai} pH` : "Tidak diteliti",
+        do_value: params.DO?.nilai ? `${params.DO.nilai} ${params.DO.satuan || ""}` : "Tidak diteliti",
         pb: pbVal !== null ? `${pbVal} mg/L` : "Tidak diteliti",
         hg: hgVal !== null ? `${hgVal} mg/L` : "Tidak diteliti",
         cd: cdVal !== null ? `${cdVal} mg/L` : "Tidak diteliti",
@@ -481,8 +374,7 @@ export default function Report() {
 
   const resetForm = () => {
     setNama("");
-    setCustomTypeUser("");
-    setSelectedUserKategori("");
+    setSelectedUserKategori([]);
     setJudul("");
     setWilayah("");
     setWaktuPengamatan("");
@@ -493,84 +385,71 @@ export default function Report() {
     setKeteranganEkologis("");
     setSelectedFile(null);
     setAgreed(false);
-    setScores({ ind1: "", ind2: "", ind3: "", ind4: "", ind5: "" });
+    setScores({
+      do_1: "", do_2: "", do_3: "", do_4: "", do_5: "",
+      metal_1: "", metal_2: "", metal_3: "", metal_4: "", metal_5: ""
+    });
     if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleUserKategoriToggle = (category) => {
+    if (selectedUserKategori.includes(category)) {
+      setSelectedUserKategori(selectedUserKategori.filter((item) => item !== category));
+    } else {
+      setSelectedUserKategori([...selectedUserKategori, category]);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage({ type: "", text: "" });
 
-    // Validasi Kelengkapan Pertanyaan
     if (!nama.trim()) return alert("Nama Lengkap Pelapor wajib diisi!");
     if (!judul.trim()) return alert("Judul Laporan wajib diisi!");
-    if (!wilayah.trim())
-      return alert("Wilayah (Kecamatan/Kab/Kota) wajib diisi!");
+    if (!wilayah.trim()) return alert("Wilayah wajib diisi!");
     if (!waktuPengamatan) return alert("Waktu Pengamatan wajib ditentukan!");
+    if (selectedUserKategori.length === 0) return alert("Pilih minimal satu Kategori Pengguna!");
 
-    const finalTypeUser =
-      selectedUserKategori === "Lainnya"
-        ? customTypeUser
-        : selectedUserKategori;
-    if (!finalTypeUser.trim()) return alert("Pilih Kategori Pengguna");
+    const finalTypeUser = selectedUserKategori.join(", ");
+    const finalRiverName = selectedRiverName === "Lainnya" ? customRiverName : selectedRiverName;
+    if (!finalRiverName.trim()) return alert("Pilih atau isi Nama Aliran Sungai!");
 
-    const finalRiverName =
-      selectedRiverName === "Lainnya" ? customRiverName : selectedRiverName;
-    if (!finalRiverName.trim())
-      return alert("Pilih atau isi Nama Aliran Sungai!");
-
-    // Validasi Indikator Evaluasi Ekologis Terisi Semua
-    const isAllScoresFilled = Object.values(scores).every(
-      (score) => score !== "",
-    );
+    const isAllScoresFilled = Object.values(scores).every((score) => score !== "");
     if (!isAllScoresFilled) {
-      return alert(
-        "Harap isi seluruh 5 pertanyaan Indikator Evaluasi Ekologis!",
-      );
+      return alert("Harap isi seluruh pertanyaan Indikator Evaluasi Ekologis!");
     }
 
-    if (!selectedFile)
-      return alert("Silakan unggah foto/video bukti lapangan!");
-    if (!keteranganEkologis.trim())
-      return alert("Keterangan Tambahan Dampak Ekologis wajib diisi!");
-    if (!agreed)
-      return alert("Anda harus menyetujui pernyataan validitas data.");
+    if (!selectedFile) return alert("Silakan unggah foto/video bukti lapangan!");
+    if (!keteranganEkologis.trim()) return alert("Keterangan Tambahan wajib diisi!");
+    if (!agreed) return alert("Anda harus menyetujui pernyataan validitas data.");
 
     setLoading(true);
 
     try {
-      // ─── 0. AMBIL EMAIL USER DARI SESSION SUPABASE ───
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
+      const { data: { session } } = await supabase.auth.getSession();
       if (!session || !session.user) {
         setLoading(false);
         setMessage({
           type: "error",
-          text: "Sesi login Anda tidak ditemukan. Silakan login terlebih dahulu untuk mengirim laporan.",
+          text: "Sesi login Anda tidak ditemukan. Silakan login terlebih dahulu.",
         });
         return;
       }
 
-      const userEmail = session.user.email; // Email didapat dari Supabase Auth
-
+      const userEmail = session.user.email;
       const [lat, lng] = markerPosition;
 
-      // Check Validasi Apakah Titik Peta Berada di Sungai/Perairan
       const isWater = await checkIfOnWater(lat, lng);
       if (!isWater) {
         setLoading(false);
         setMessage({
           type: "error",
-          text: "Lokasi tidak valid! Titik koordinat yang Anda pilih terdeteksi di daratan. Silakan geser marker ke area sungai atau perairan.",
+          text: "Lokasi tidak valid! Titik koordinat terdeteksi di daratan. Silakan geser marker ke area sungai.",
         });
         return;
       }
 
       let imageUrl = null;
-
-      // 1. Upload Gambar ke Supabase Storage
       if (selectedFile) {
         const fileExt = selectedFile.name.split(".").pop();
         const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
@@ -579,8 +458,7 @@ export default function Report() {
           .from("report-images")
           .upload(fileName, selectedFile);
 
-        if (uploadError)
-          throw new Error("Gagal mengunggah bukti: " + uploadError.message);
+        if (uploadError) throw new Error("Gagal mengunggah bukti: " + uploadError.message);
 
         const { data: publicUrlData } = supabase.storage
           .from("report-images")
@@ -589,10 +467,9 @@ export default function Report() {
         imageUrl = publicUrlData.publicUrl;
       }
 
-      // 2. Simpan ke Supabase Database
       const { error: insertError } = await supabase.from("reports").insert([
         {
-          user_email: userEmail, // <-- TAMBAHKAN BARIS INI (Kunci perbaikan)
+          user_email: userEmail,
           title: judul,
           user_name: nama,
           user_type: finalTypeUser,
@@ -605,10 +482,12 @@ export default function Report() {
           wilayah: wilayah,
           waktu_pengamatan: waktuPengamatan,
           ecological_score: {
-            score_total: totalSkor,
+            sub_index_do: subIndexDO,
+            sub_index_metal: subIndexMetal,
+            wqi_total: totalWQI,
             kategori: statusObj.label,
             color_indicator: statusObj.color,
-            details: scores,
+            raw_details: scores,
           },
           journal_reference: selectedJournal
             ? {
@@ -646,19 +525,14 @@ export default function Report() {
       <div className="w-full max-w-4xl bg-[#FDF1CE] rounded-2xl shadow-2xl p-6 md:p-10 my-6">
         {/* Header */}
         <div className="text-center mb-8 border-b-2 border-[#A52A2A]/20 pb-6">
-          <div className="flex justify-center items-center gap-2 text-[#A52A2A] mb-1">
-            <Waves className="w-8 h-8" />
-            <h1 className="text-2xl md:text-4xl font-black uppercase tracking-wide">
-              Laporan Pemetaan Ekologis Sungai
-            </h1>
-          </div>
-          <p className="text-xs md:text-sm text-gray-700 font-semibold">
-            Formulir survei bioindikator populasi ikan sapu-sapu & pemetaan
-            lokasi real-time
+          <h1 className="text-2xl md:text-4xl font-black uppercase tracking-wide text-[#A52A2A]">
+            Laporan Pemetaan Ekologis Sungai
+          </h1>
+          <p className="text-xs md:text-sm text-gray-700 font-semibold mt-1">
+            Formulir survei bioindikator populasi ikan sapu-sapu & Evaluasi Kualitas Air Sungai
           </p>
         </div>
 
-        {/* Notifikasi Message */}
         {message.text && (
           <div
             className={`p-4 mb-6 rounded-lg flex items-center gap-3 text-sm font-semibold shadow-sm ${
@@ -673,103 +547,94 @@ export default function Report() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* ─── 1. DATA IDENTITAS & INFORMASI PENGAMATAN ─── */}
+          {/* 1. DATA IDENTITAS */}
           <div className="bg-white/70 p-5 rounded-xl border border-amber-200 shadow-sm space-y-4">
             <h2 className="text-base font-bold text-[#A52A2A] flex items-center gap-2 border-b pb-2">
-              <FileText className="w-5 h-5" /> 1. DATA IDENTITAS & INFORMASI
-              PENGAMATAN
+              <FileText className="w-5 h-5" /> 1. DATA IDENTITAS & INFORMASI PENGAMATAN
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-black mb-1">
-                  Nama Lengkap Pelapor *
-                </label>
+                <label className="block text-xs font-bold text-black mb-1">Nama Lengkap Pelapor</label>
                 <input
                   type="text"
                   required
                   value={nama}
                   onChange={(e) => setNama(e.target.value)}
-                  placeholder="Contoh: Ahmad Subagja"
+                  placeholder="Contoh: Naufal Yudha"
                   className="w-full bg-white px-3 py-2 text-sm text-gray-800 border rounded focus:outline-none focus:ring-2 focus:ring-green-600"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-black mb-1">
-                  Kategori Pengguna
+                  Kategori Pengguna <span className="text-gray-500 font-normal">(Bisa pilih lebih dari satu)</span>
                 </label>
-                <select
-                  required
-                  value={selectedUserKategori}
-                  onChange={(e) => setSelectedUserKategori(e.target.value)}
-                  className="w-full bg-white px-3 py-2 text-sm font-semibold text-gray-800 border rounded focus:outline-none focus:ring-2 focus:ring-green-600 cursor-pointer"
-                >
-                  <option value="">-- Pilih Kategori Pengguna --</option>
-                  {TYPE_USER.map((t, idx) => (
-                    <option key={idx} value={t}>
-                      {t}
-                    </option>
-                  ))}
-                </select>
-
-                {selectedUserKategori === "Lainnya" && (
-                  <input
-                    type="text"
-                    required
-                    value={customTypeUser}
-                    onChange={(e) => setCustomTypeUser(e.target.value)}
-                    placeholder="Masukkan Kategori Pengguna lainnya..."
-                    className="w-full mt-2 bg-white px-3 py-2 text-sm text-gray-800 border rounded focus:outline-none focus:ring-2 focus:ring-green-600"
-                  />
-                )}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-white p-3 border rounded-lg shadow-sm">
+                  {TYPE_USER.map((category, idx) => {
+                    const isChecked = selectedUserKategori.includes(category);
+                    return (
+                      <label
+                        key={idx}
+                        className={`flex items-center gap-2 p-2.5 rounded-md border cursor-pointer transition-all ${
+                          isChecked
+                            ? "bg-green-100 border-green-600 font-semibold text-green-900"
+                            : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => handleUserKategoriToggle(category)}
+                          className="w-4 h-4 accent-green-700 rounded cursor-pointer"
+                        />
+                        <span className="text-xs">{category}</span>
+                      </label>
+                    );
+                  })}
+                </div>
               </div>
 
-              <div className="md:col-span-2">
-                <label className="block text-xs font-bold text-black mb-1">
-                  Judul Laporan Pengamatan *
-                </label>
+              <div>
+                <label className="block text-xs font-bold text-black mb-1">Judul Laporan Pengamatan</label>
                 <input
                   type="text"
                   required
                   value={judul}
                   onChange={(e) => setJudul(e.target.value)}
-                  placeholder="ex: Temuan Kelimpahan Ikan Sapu-Sapu di Bantaran Sungai"
+                  placeholder="ex: Evaluasi Kualitas Air & Biomassa Sapu-Sapu"
                   className="w-full bg-white px-3 py-2 text-sm text-gray-800 border rounded focus:outline-none focus:ring-2 focus:ring-green-600"
                 />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-black mb-1">Wilayah (Kecamatan / Kab / Kota)</label>
+                  <input
+                    type="text"
+                    required
+                    value={wilayah}
+                    onChange={(e) => setWilayah(e.target.value)}
+                    placeholder="Contoh: Ciracas, Depok"
+                    className="w-full bg-white px-3 py-2 text-sm text-gray-800 border rounded focus:outline-none focus:ring-2 focus:ring-green-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-black mb-1">Waktu Pengamatan</label>
+                  <input
+                    type="datetime-local"
+                    required
+                    value={waktuPengamatan}
+                    onChange={(e) => setWaktuPengamatan(e.target.value)}
+                    className="w-full bg-white px-3 py-2 text-sm text-gray-800 border rounded focus:outline-none focus:ring-2 focus:ring-green-600"
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-black mb-1">
-                  Wilayah (Kecamatan / Kab / Kota) *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={wilayah}
-                  onChange={(e) => setWilayah(e.target.value)}
-                  placeholder="Contoh: Pancoran Mas, Depok"
-                  className="w-full bg-white px-3 py-2 text-sm text-gray-800 border rounded focus:outline-none focus:ring-2 focus:ring-green-600"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-black mb-1">
-                  Waktu Pengamatan *
-                </label>
-                <input
-                  type="datetime-local"
-                  required
-                  value={waktuPengamatan}
-                  onChange={(e) => setWaktuPengamatan(e.target.value)}
-                  className="w-full bg-white px-3 py-2 text-sm text-gray-800 border rounded focus:outline-none focus:ring-2 focus:ring-green-600"
-                />
-              </div>
-
-              <div className="md:col-span-2">
                 <label className="block text-xs font-bold text-black mb-1 flex items-center gap-1">
-                  <Waves className="w-4 h-4 text-blue-600" /> Pilih Nama Aliran
-                  Sungai *
+                  <Waves className="w-4 h-4 text-blue-600" /> Pilih Nama Aliran Sungai
                 </label>
                 <select
                   required
@@ -779,9 +644,7 @@ export default function Report() {
                 >
                   <option value="">-- Pilih Nama Sungai --</option>
                   {RIVERS_LIST.map((r, idx) => (
-                    <option key={idx} value={r}>
-                      {r}
-                    </option>
+                    <option key={idx} value={r}>{r}</option>
                   ))}
                 </select>
 
@@ -799,12 +662,11 @@ export default function Report() {
             </div>
           </div>
 
-          {/* ─── 2. DESAIN PETA INTERAKTIF KONSISTEN DENGAN LAYOUT MAP DISAMPING ─── */}
+          {/* 2. PETA INTERAKTIF */}
           <div className="bg-white/70 p-5 rounded-xl border border-amber-200 shadow-sm space-y-4">
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b pb-2">
               <h2 className="text-base font-bold text-[#A52A2A] flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-red-600" /> 2. TITIK LOKASI
-                PENGAMATAN PERSIS (PETA INTERAKTIF)
+                <MapPin className="w-5 h-5 text-red-600" /> 2. TITIK LOKASI PENGAMATAN PERSIS
               </h2>
 
               <button
@@ -813,235 +675,131 @@ export default function Report() {
                 disabled={gettingLocation}
                 className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors cursor-pointer"
               >
-                {gettingLocation ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <Crosshair className="w-3.5 h-3.5" />
-                )}
+                {gettingLocation ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Crosshair className="w-3.5 h-3.5" />}
                 Gunakan GPS Saya Saat Ini
               </button>
             </div>
 
-            <p className="text-xs text-gray-600 italic">
-              *Geser marker atau klik pada peta. Laporan{" "}
-              <strong>wajib berada di titik sungai/perairan</strong> (bukan
-              daratan).
-            </p>
-
-            {/* Frame Peta Disesuaikan dengan Halaman Peta Utama */}
             <div className="bg-[#D9D7C7] p-3 rounded-3xl border-4 border-[#C1BD9C] shadow-inner">
               <div className="w-full h-80 rounded-2xl overflow-hidden border border-gray-300 shadow-sm relative z-0">
-                <MapContainer
-                  center={markerPosition || [-6.204043, 106.812515]} // Default Center Jakarta
-                  zoom={11} // Level zoom 11 pas menampilkan se-Jakarta (tidak terlalu dekat/jauh)
-                  tap={false}
-                  scrollWheelZoom={true}
-                  className="w-full h-full"
-                >
-                  {/* TileLayer Base Map (Light No Labels) */}
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                    url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
-                  />
-
-                  {/* Dynamic Recenter & Marker Terpilih */}
-                  <MapRecenter
-                    lat={markerPosition[0]}
-                    lng={markerPosition[1]}
-                  />
-                  <LocationPickerMarker
-                    position={markerPosition}
-                    setPosition={setMarkerPosition}
-                  />
-
-                  {/* Rendering Aliran Sungai Biru Tebal (Sama seperti Map.jsx) */}
-                  {rivers &&
-                    rivers.map((river, idx) => (
-                      <Polyline
-                        key={idx}
-                        positions={river.path}
-                        pathOptions={{
-                          color: "#0284c7", // Warna biru terang/tebal
-                          weight: 5, // Ketebalan garis agar terlihat jelas
-                          opacity: 0.85,
-                        }}
-                      >
-                        <Tooltip
-                          permanent
-                          direction="center"
-                          className="bg-white/90 text-sky-900 font-bold text-[10px] px-1.5 py-0.5 rounded border border-sky-300 shadow-sm"
-                        >
-                          {river.name}
-                        </Tooltip>
-                      </Polyline>
-                    ))}
-
-                  {/* TileLayer Label Jalan & Nama Tempat di Atas Garis Sungai */}
+                <MapContainer center={markerPosition} zoom={11} scrollWheelZoom={true} className="w-full h-full">
+                  <TileLayer url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png" />
+                  <MapRecenter lat={markerPosition[0]} lng={markerPosition[1]} />
+                  <LocationPickerMarker position={markerPosition} setPosition={setMarkerPosition} />
+                  {rivers.map((river, idx) => (
+                    <Polyline key={idx} positions={river.path} pathOptions={{ color: "#0284c7", weight: 5, opacity: 0.85 }}>
+                      <Tooltip permanent direction="center" className="bg-white/90 text-sky-900 font-bold text-[10px] px-1.5 py-0.5 rounded border border-sky-300 shadow-sm">
+                        {river.name}
+                      </Tooltip>
+                    </Polyline>
+                  ))}
                   <TileLayer url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png" />
                 </MapContainer>
               </div>
 
-              {/* Readout Koordinat Terpilih */}
               <div className="mt-3 bg-white/80 backdrop-blur px-4 py-2 rounded-xl flex justify-between items-center text-xs font-mono font-bold text-gray-700 border border-amber-200">
-                <span>Latitude: {markerPosition[0].toFixed(6)}</span>
-                <span>Longitude: {markerPosition[1].toFixed(6)}</span>
+                <span>Lat: {markerPosition[0].toFixed(6)}</span>
+                <span>Lng: {markerPosition[1].toFixed(6)}</span>
               </div>
             </div>
           </div>
 
-          {/* ─── 3. REFERENSI JURNAL ILMIAH ─── */}
-          <div className="bg-white/70 p-5 rounded-xl border border-amber-200 shadow-sm space-y-3">
+          {/* 3. INDIKATOR EVALUASI EKOLOGIS (10 SOAL) */}
+          <div className="bg-white/70 p-5 rounded-xl border border-amber-200 shadow-sm space-y-6">
             <h2 className="text-base font-bold text-[#A52A2A] flex items-center gap-2 border-b pb-2">
-              <BookOpen className="w-5 h-5" /> 3. REFERENSI JURNAL ILMIAH
-              (OPSIONAL)
+              <Activity className="w-5 h-5" /> 3. INDIKATOR EVALUASI EKOLOGI SUNGAI
             </h2>
 
-            <select
-              value={selectedLokasiId}
-              onChange={handleJournalSelect}
-              className="w-full bg-white px-3 py-2 text-sm font-medium text-gray-800 border rounded focus:outline-none focus:ring-2 focus:ring-green-600 cursor-pointer"
-            >
-              <option value="">-- Pilih Jurnal --</option>
-              {JOURNAL_DATA.map((item) => (
-                <option key={item.id_lokasi} value={item.id_lokasi}>
-                  {item.nama_sungai} - {item.segmen} (
-                  {item.sumber_jurnal.penulis}, {item.sumber_jurnal.tahun})
-                </option>
+            {/* SUB-BAGIAN 1: DO */}
+            <div className="space-y-4 bg-sky-50/50 p-4 rounded-lg border border-sky-200">
+              <h3 className="text-sm font-black text-sky-900 uppercase flex items-center gap-2">
+                <Waves className="w-4 h-4 text-sky-600" /> A. Indikator Oksigen Terlarut (DO) & Fisik Air
+              </h3>
+              {ECOLOGICAL_QUESTIONS.filter(q => q.category === "DO").map((ind) => (
+                <div key={ind.id} className="space-y-1 text-xs md:text-sm bg-white p-3 rounded border border-sky-100">
+                  <label className="font-bold text-gray-900 block">{ind.label}</label>
+                  <select
+                    required
+                    value={scores[ind.id]}
+                    onChange={(e) => setScores({ ...scores, [ind.id]: e.target.value })}
+                    className="w-full mt-1 bg-gray-50 p-2 border rounded font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-sky-600 cursor-pointer"
+                  >
+                    <option value="">-- Pilih Jawaban Indikator --</option>
+                    {ind.options.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                </div>
               ))}
-            </select>
+            </div>
 
-            {selectedJournal && (
-              <div className="bg-amber-50 p-4 rounded-md border border-amber-200 mt-2">
-                <p className="text-xs font-bold text-amber-900 mb-2">
-                  ⚡ Parameter Kimia Terisi Otomatis Berdasarkan Jurnal Ilmiah:
-                </p>
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
-                  <div className="bg-white p-2 rounded border">
-                    <span className="text-gray-500 block">pH Air:</span>
-                    <span className="font-bold text-gray-800">
-                      {journalParams.ph}
-                    </span>
-                  </div>
-                  <div className="bg-white p-2 rounded border">
-                    <span className="text-gray-500 block">DO (Oksigen):</span>
-                    <span className="font-bold text-gray-800">
-                      {journalParams.do_value}
-                    </span>
-                  </div>
-                  <div className="bg-white p-2 rounded border">
-                    <span className="text-gray-500 block">Logam Pb:</span>
-                    <span className="font-bold text-gray-800">
-                      {journalParams.pb}
-                    </span>
-                  </div>
-                  <div className="bg-white p-2 rounded border">
-                    <span className="text-gray-500 block">Logam Hg:</span>
-                    <span className="font-bold text-gray-800">
-                      {journalParams.hg}
-                    </span>
-                  </div>
-                  <div className="bg-white p-2 rounded border">
-                    <span className="text-gray-500 block">Logam Cd:</span>
-                    <span className="font-bold text-gray-800">
-                      {journalParams.cd}
-                    </span>
-                  </div>
+            {/* SUB-BAGIAN 2: LOGAM BERAT */}
+            <div className="space-y-4 bg-amber-50/50 p-4 rounded-lg border border-amber-200">
+              <h3 className="text-sm font-black text-amber-900 uppercase flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 text-amber-600" /> B. Indikator Potensi Cemaran Logam Berat & Sedimen
+              </h3>
+              {ECOLOGICAL_QUESTIONS.filter(q => q.category === "LOGAM").map((ind) => (
+                <div key={ind.id} className="space-y-1 text-xs md:text-sm bg-white p-3 rounded border border-amber-100">
+                  <label className="font-bold text-gray-900 block">{ind.label}</label>
+                  <select
+                    required
+                    value={scores[ind.id]}
+                    onChange={(e) => setScores({ ...scores, [ind.id]: e.target.value })}
+                    className="w-full mt-1 bg-gray-50 p-2 border rounded font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-600 cursor-pointer"
+                  >
+                    <option value="">-- Pilih Jawaban Indikator --</option>
+                    {ind.options.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+
+            {/* RINGKASAN SKOR WQI & SUB-INDEKS */}
+            <div className="p-4 bg-white rounded-lg border shadow-inner space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center border-b pb-3">
+                <div className="bg-sky-50 p-2 rounded border border-sky-200">
+                  <span className="text-[11px] font-bold text-sky-800 block uppercase">OKSIGEN TERLARUT (DO):</span>
+                  <span className="text-xl font-black text-sky-900">{subIndexDO} / 100</span>
+                </div>
+                <div className="bg-amber-50 p-2 rounded border border-amber-200">
+                  <span className="text-[11px] font-bold text-amber-800 block">LOGAM BERAT (Pb, Hg, Cd):</span>
+                  <span className="text-xl font-black text-amber-900">{subIndexMetal} / 100</span>
+                </div>
+                <div className="bg-emerald-50 p-2 rounded border border-emerald-200">
+                  <span className="text-[11px] font-bold text-emerald-800 block uppercase">Total Rata-Rata:</span>
+                  <span className="text-xl font-black text-emerald-900">{totalWQI} / 100</span>
                 </div>
               </div>
-            )}
-          </div>
 
-          {/* ─── 4. INDIKATOR EVALUASI EKOLOGIS ─── */}
-          <div className="bg-white/70 p-5 rounded-xl border border-amber-200 shadow-sm space-y-4">
-            <h2 className="text-base font-bold text-[#A52A2A] flex items-center gap-2 border-b pb-2">
-              <Activity className="w-5 h-5" /> 4. INDIKATOR EVALUASI KEPADATAN &
-              EKOLOGI SUNGAI (WAJIB ALL)
-            </h2>
-
-            {ECOLOGICAL_INDICATORS.map((ind) => (
-              <div key={ind.id} className="space-y-1 text-xs md:text-sm">
-                <label className="font-bold text-gray-900 block">
-                  {ind.label} *
-                </label>
-                <p className="text-gray-600 italic">{ind.description}</p>
-                <select
-                  required
-                  value={scores[ind.id]}
-                  onChange={(e) =>
-                    setScores({ ...scores, [ind.id]: e.target.value })
-                  }
-                  className="w-full bg-white p-2 border rounded font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-600 cursor-pointer"
-                >
-                  <option value="">-- Pilih Jawaban Indikator --</option>
-                  {ind.options.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ))}
-
-            <div className="mt-4 p-4 bg-white rounded-lg border flex flex-col sm:flex-row items-center justify-between gap-3 shadow-inner">
-              <div>
-                <p className="text-xs text-gray-500 uppercase font-bold">
-                  Total Skor Ekologis:
-                </p>
-                <p className="text-2xl font-black text-gray-800">
-                  {totalSkor} / 25
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-xs text-gray-500 uppercase font-bold mb-1">
-                  Status Kualitas Air:
-                </p>
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-bold border ${statusObj.badge}`}
-                >
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1">
+                <span className="text-xs font-bold text-gray-600 uppercase">Kategori Kualitas Air:</span>
+                <span className={`px-4 py-1.5 rounded-full text-xs font-black border ${statusObj.badge}`}>
                   {statusObj.label}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* ─── 5. BUKTI MEDIA & CATATAN ─── */}
+          {/* 4. MEDIA & CATATAN */}
           <div className="bg-white/70 p-5 rounded-xl border border-amber-200 shadow-sm space-y-4">
             <h2 className="text-base font-bold text-[#A52A2A] flex items-center gap-2 border-b pb-2">
-              <Download className="w-5 h-5" /> 5. BUKTI UNGGAH FOTO/VIDEO &
-              CATATAN
+              <Download className="w-5 h-5" /> 4. BUKTI UNGGAH FOTO/VIDEO & CATATAN
             </h2>
 
             <div>
-              <label className="block text-xs font-bold text-black mb-2">
-                Unggah Foto/Video Bukti Lapangan *
-              </label>
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                className="hidden"
-                accept="image/*,video/*"
-              />
+              <label className="block text-xs font-bold text-black mb-2">Unggah Foto/Video Bukti Lapangan</label>
+              <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*,video/*" />
 
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full bg-[#2E4A47] p-4 rounded cursor-pointer hover:bg-[#233a38] transition-colors"
-              >
+              <div onClick={() => fileInputRef.current?.click()} className="w-full bg-[#2E4A47] p-4 rounded cursor-pointer hover:bg-[#233a38] transition-colors">
                 <div className="border-2 border-dashed border-sky-200 bg-[#E8F1F5] py-6 px-4 flex flex-col items-center justify-center rounded">
                   {selectedFile ? (
                     <div className="flex flex-col items-center gap-2">
                       {previewUrl ? (
                         <div className="relative mb-2">
-                          <img
-                            src={previewUrl}
-                            alt="Preview"
-                            className="w-32 h-32 object-cover rounded-lg border-2 border-green-600 shadow-md"
-                          />
-                          <button
-                            type="button"
-                            onClick={handleRemoveFile}
-                            className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 shadow"
-                          >
+                          <img src={previewUrl} alt="Preview" className="w-32 h-32 object-cover rounded-lg border-2 border-green-600 shadow-md" />
+                          <button type="button" onClick={handleRemoveFile} className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 shadow">
                             <X className="w-4 h-4" />
                           </button>
                         </div>
@@ -1049,25 +807,14 @@ export default function Report() {
                         <ImageIcon className="w-10 h-10 text-green-600 mb-1" />
                       )}
                       <span className="text-green-700 font-bold flex items-center gap-1 text-xs md:text-sm">
-                        <CheckCircle2 className="w-4 h-4" /> Terpilih:{" "}
-                        {selectedFile.name}
+                        <CheckCircle2 className="w-4 h-4" /> Terpilih: {selectedFile.name}
                       </span>
-                      <button
-                        type="button"
-                        onClick={handleRemoveFile}
-                        className="text-xs text-red-600 font-bold hover:underline mt-1"
-                      >
-                        Ganti File
-                      </button>
                     </div>
                   ) : (
                     <>
                       <Download className="w-8 h-8 text-gray-500 mb-2" />
                       <p className="text-xs md:text-sm text-black font-semibold text-center">
-                        Klik untuk memilih file{" "}
-                        <span className="text-gray-500 font-normal">
-                          (Foto atau Video, maks 10MB)
-                        </span>
+                        Klik untuk memilih file <span className="text-gray-500 font-normal">(Maks 10MB)</span>
                       </p>
                     </>
                   )}
@@ -1076,21 +823,19 @@ export default function Report() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-black mb-1">
-                Keterangan Tambahan Dampak Ekologis Sungai *
-              </label>
+              <label className="block text-xs font-bold text-black mb-1">Keterangan Tambahan Dampak Ekologis Sungai</label>
               <textarea
                 rows="3"
                 required
                 value={keteranganEkologis}
                 onChange={(e) => setKeteranganEkologis(e.target.value)}
-                placeholder="Deskripsikan dampak spesifik populasi ikan sapu-sapu di titik pengamatan ini..."
+                placeholder="Deskripsikan temuan kondisi fisik atau dampak spesifik di lokasi..."
                 className="w-full bg-white px-3 py-2 text-sm text-gray-800 border rounded focus:outline-none focus:ring-2 focus:ring-green-600"
               ></textarea>
             </div>
           </div>
 
-          {/* ─── FOOTER & SUBMIT ─── */}
+          {/* FOOTER & SUBMIT */}
           <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <label className="flex items-start gap-3 cursor-pointer max-w-xl">
               <input
@@ -1101,8 +846,7 @@ export default function Report() {
                 className="w-5 h-5 mt-0.5 accent-green-700 cursor-pointer flex-shrink-0"
               />
               <span className="text-xs md:text-sm font-bold text-black leading-tight">
-                Saya menyetujui bahwa data ekologis yang saya kirimkan bersifat
-                valid dan sesuai lokasi pengamatan sebenarnya.
+                Saya berusia (diatas 15 tahun) dan menyatakan dengan sebenar-benarnya bahwa data ekologis yang saya kirimkan bersifat valid serta sesuai lokasi pengamatan di lapangan.
               </span>
             </label>
 
@@ -1111,14 +855,7 @@ export default function Report() {
               disabled={loading}
               className="w-full sm:w-auto bg-[#008000] hover:bg-green-800 disabled:bg-gray-400 text-white font-extrabold px-8 py-3 rounded-full shadow-lg transition-all flex items-center justify-center gap-2 uppercase tracking-wider text-sm cursor-pointer"
             >
-              {loading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" /> Memverifikasi &
-                  Mengirim...
-                </>
-              ) : (
-                "Submit Laporan"
-              )}
+              {loading ? <><Loader2 className="w-5 h-5 animate-spin" /> Mengirim...</> : "Submit Laporan"}
             </button>
           </div>
         </form>

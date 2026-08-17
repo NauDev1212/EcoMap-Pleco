@@ -6,6 +6,7 @@ import { ShieldAlert, Leaf, Droplet, Info } from "lucide-react";
 import pardalisImg from "../asset/pardalis.jpg";
 import disjunctivusImg from "../asset/disjunctivus.jpg";
 import plecostomusImg from "../asset/plecostomus.jpg";
+import nilemImg from "../asset/nilem.jpg";
 
 export default function Education() {
   return (
