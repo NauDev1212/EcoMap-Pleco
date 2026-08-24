@@ -101,23 +101,24 @@ export default function Map({ isLoggedIn = true }) {
 
   // ─── HELPER MENDAPATKAN TOTAL SKOR TERTIMBANG WQI (20 - 100) ───
   const getScoreValue = (report) => {
-    if (!report) return 0;
+  if (!report) return 0;
 
-    const eco = report.ecological_score;
-    
-    // Jika tersimpan sebagai objek hasil kalkulasi WQI
-    if (typeof eco === "object" && eco !== null) {
-      if (typeof eco.totalWQI === "number") return eco.totalWQI;
-      if (typeof eco.score_total === "number") return eco.score_total;
-      if (typeof eco.total === "number") return eco.total;
-    }
+  const eco = report.ecological_score;
+  
+  // Jika tersimpan sebagai objek hasil kalkulasi WQI
+  if (typeof eco === "object" && eco !== null) {
+    if (typeof eco.wqi_total === "number") return eco.wqi_total; // <--- DITAMBAHKAN
+    if (typeof eco.totalWQI === "number") return eco.totalWQI;
+    if (typeof eco.score_total === "number") return eco.score_total;
+    if (typeof eco.total === "number") return eco.total;
+  }
 
-    if (typeof eco === "number") return eco;
-    if (typeof report.total_wqi === "number") return report.total_wqi;
-    if (typeof report.density === "number") return report.density;
+  if (typeof eco === "number") return eco;
+  if (typeof report.total_wqi === "number") return report.total_wqi;
+  if (typeof report.density === "number") return report.density;
 
-    return 0;
-  };
+  return 0;
+};
 
   // ─── HELPER PENENTU WARNA MARKER BERDASARKAN RATA-RATA WQI ───
   const getMarkerColor = (report) => {
@@ -146,47 +147,74 @@ export default function Map({ isLoggedIn = true }) {
   // ─── HELPER PH AIR STATIS (REFERENSI JURNAL 5 SUNGAI) ───
 const getPHValue = () => {
   // Langsung kembalikan nilai statis yang Anda inginkan
-  return "6.5 pH"; // Atau rentang seperti: return "3 - 8 pH";
+  return "4.80 – 10.20 pH"; // Atau rentang seperti: return "3 - 8 pH";
 
 };
 
-  // ─── HELPER MENDAPATKAN SUB-INDEKS / NILAI DISSOLVED OXYGEN (DO) ───
-  const getDOValue = (report) => {
-    if (!report) return "-";
+// ─── HELPER MENDAPATKAN SUB-INDEKS / NILAI DISSOLVED OXYGEN (DO) ───
+const getDOValue = (report) => {
+  if (!report) return "N/A";
 
-    const eco = report.ecological_score;
-    if (eco && typeof eco === "object") {
-      if (eco.subIndexDO !== undefined) return `${eco.subIndexDO} Poin (WQI)`;
-      if (eco.do_score !== undefined) return `${eco.do_score} Poin`;
+  const eco = report?.ecological_score;
+  if (eco && typeof eco === "object") {
+    // 1. Cek kunci utama dari Supabase (snake_case)
+    if (eco.sub_index_do !== undefined && eco.sub_index_do !== null) {
+      return `${eco.sub_index_do} mg/L (WQI)`;
+    }
+    // 2. Fallback format alternatif
+    if (eco.subIndexDO !== undefined && eco.subIndexDO !== null) {
+      return `${eco.subIndexDO} mg/L (WQI)`;
+    }
+    if (eco.do_score !== undefined && eco.do_score !== null) {
+      return `${eco.do_score} mg/L`;
+    }
+  }
+
+  // Fallback jurnal jika data WQI tidak ada
+  const params = report?.journal_reference?.parameter;
+  if (params && (params.do_value || params.do)) {
+    return params.do_value || params.do;
+  }
+  return report?.do_value || report?.do || "N/A";
+};
+
+// ─── HELPER MENDAPATKAN SUB-INDEKS / NILAI LOGAM BERAT ───
+const getHeavyMetalValue = (report) => {
+  if (!report) return "N/A";
+
+  const eco = report?.ecological_score;
+  if (eco && typeof eco === "object") {
+    // 1. Cek kunci utama dari Supabase (snake_case)
+    if (eco.sub_index_metal !== undefined && eco.sub_index_metal !== null) {
+      // Pembalikan nilai: 120 - nilai_asli
+      // Jika WQI Logam = 100 (Sangat Bagus), Tingkat Cemaran = 20 (Rendah)
+      // Jika WQI Logam = 20 (Sangat Buruk), Tingkat Cemaran = 100 (Tinggi)
+      const contaminationLevel = 120 - Number(eco.sub_index_metal);
+      return `${contaminationLevel} Poin`;
     }
 
-    const params = report.journal_reference?.parameter;
-    if (params && (params.do_value || params.do)) {
-      return params.do_value || params.do;
+    // 2. Fallback format alternatif
+    if (eco.subIndexMetal !== undefined && eco.subIndexMetal !== null) {
+      const contaminationLevel = 120 - Number(eco.subIndexMetal);
+      return `${contaminationLevel} Poin`;
     }
-    return report.do_value || report.do || "N/A";
-  };
-
-  // ─── HELPER MENDAPATKAN SUB-INDEKS / NILAI LOGAM BERAT ───
-  const getHeavyMetalValue = (report) => {
-    if (!report) return "-";
-
-    const eco = report.ecological_score;
-    if (eco && typeof eco === "object") {
-      if (eco.subIndexMetal !== undefined) return `${eco.subIndexMetal} Poin (WQI)`;
-      if (eco.metal_score !== undefined) return `${eco.metal_score} Poin`;
+    if (eco.metal_score !== undefined && eco.metal_score !== null) {
+      const contaminationLevel = 120 - Number(eco.metal_score);
+      return `${contaminationLevel} Poin`;
     }
+  }
 
-    const params = report.journal_reference?.parameter;
-    if (params) {
-      const list = [];
-      if (params.cd && params.cd !== "Tidak diteliti") list.push(`Cd: ${params.cd}`);
-      if (params.hg && params.hg !== "Tidak diteliti") list.push(`Hg: ${params.hg}`);
-      if (params.pb && params.pb !== "Tidak diteliti") list.push(`Pb: ${params.pb}`);
-      if (list.length > 0) return list.join(", ");
-    }
-    return report.heavy_metal || "N/A";
-  };
+  // Fallback jurnal jika data WQI tidak ada (tetap menampilkan kadar konsentrasi asli dari jurnal)
+  const params = report?.journal_reference?.parameter;
+  if (params) {
+    const list = [];
+    if (params.cd && params.cd !== "Tidak diteliti") list.push(`Cd: ${params.cd}`);
+    if (params.hg && params.hg !== "Tidak diteliti") list.push(`Hg: ${params.hg}`);
+    if (params.pb && params.pb !== "Tidak diteliti") list.push(`Pb: ${params.pb}`);
+    if (list.length > 0) return list.join(", ");
+  }
+  return report?.heavy_metal || "N/A";
+};
 
   // ─── HELPER MENDAPATKAN NAMA LOKASI ───
   const getReportLocation = (report) => {
@@ -394,7 +422,7 @@ const getPHValue = () => {
           <div className="bg-white p-5 rounded-3xl shadow-sm border border-neutral-200 space-y-4">
             <h3 className="text-base font-extrabold text-neutral-800 border-b pb-2 tracking-tight flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#008000]"></span>{" "}
-              Indikator Kualitas Air (WQI)
+              Indikator Kualitas Air
             </h3>
             <div className="grid grid-cols-2 gap-3 text-xs font-medium">
               <div className="flex items-center gap-2.5 p-1.5 bg-neutral-50 rounded-lg">

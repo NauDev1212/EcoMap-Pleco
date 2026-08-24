@@ -6,7 +6,17 @@ import { ShieldAlert, Leaf, Droplet, Info } from "lucide-react";
 import pardalisImg from "../asset/pardalis.jpg";
 import disjunctivusImg from "../asset/disjunctivus.jpg";
 import plecostomusImg from "../asset/plecostomus.jpg";
+
 import nilemImg from "../asset/nilem.jpg";
+import tawesImg from "../asset/tawes.jpg";
+import betokImg from "../asset/betok.jpg";
+import waderImg from "../asset/wader.jpg";
+import ketingImg from "../asset/keting.jpg";
+import siliImg from "../asset/sili.jpg";
+
+import gabusImg from "../asset/gabus.jpg";
+import leleImg from "../asset/lele.jpg";
+import baungImg from "../asset/baung.jpg";
 
 export default function Education() {
   return (
@@ -177,10 +187,325 @@ export default function Education() {
         </section>
 
         {/* ─── SUB JUDUL 2: IKAN LOKAL TERANCAM PUNAH ─── */}
+        <section className="space-y-6">
+          <div className="border-b-2 border-[#008000]/20 pb-2">
+            <h2 className="text-2xl font-bold text-[#008000] flex items-center gap-2">
+              <Droplet size={24} /> 2. Ikan Lokal Yang Terancam Punah
+            </h2>
+            <p className="text-xs text-neutral-600 mt-1">
+              Kenali berbagai spesies ikan lokal yang mengalami tekanan populasi akibat kehadiran ikan invasif.
+            </p>
+          </div>
+        
+          {/* KOTAK INFORMASI / PERINGATAN */}
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200 space-y-4">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 bg-red-100 text-red-600 rounded-xl flex items-center justify-center shrink-0 font-bold">
+                <span className="text-xl">⚠️</span>
+              </div>
+              <div className="space-y-1">
+                <h3 className="font-bold text-neutral-800 text-base">Mengapa Ikan Lokal Perlu Dilindungi?</h3>
+                <p className="text-xs md:text-sm text-neutral-600 leading-relaxed">
+                  Ikan sapu-sapu merupakan ikan introduksi yang dapat menjadi invasif di perairan Indonesia. 
+                  Keberadaannya dalam jumlah tinggi dapat memberikan tekanan terhadap ekosistem dan komunitas ikan lokal. 
+                  Aktivitas di dasar perairan juga dapat berpotensi mengganggu telur atau organisme lain yang berada di habitat tersebut.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 pt-2 border-t border-neutral-100 text-xs font-semibold text-[#008000]">
+              <Leaf size={16} />
+              <span>YUK, KENALI SIAPA YANG HIDUP BERSAMA MEREKA.</span>
+            </div>
+          </div>
+        
+          {/* GRID KARTU SPESIES (6 KARTU) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            {/* KARTU SPESIES 1: NILEM */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-200 flex flex-col justify-between">
+              <div className="h-56 md:h-64 relative overflow-hidden bg-white p-4 flex items-center justify-center">
+                <img 
+                  src={nilemImg} 
+                  alt="Osteochilus vittatus" 
+                  className="w-full h-full object-contain mix-blend-multiply" 
+                />
+                <span className="absolute top-4 right-4 z-10 bg-emerald-100 text-emerald-800 font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 border border-emerald-300">
+                  <Leaf size={12} /> Ikan Lokal
+                </span>
+              </div>
+              <div className="p-6 space-y-2">
+                <h3 className="text-xl font-bold text-[#008000]">Nilem</h3>
+                <p className="text-xs font-mono text-gray-400 uppercase tracking-widest">Osteochilus vittatus</p>
+                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest pt-1">@ Ciri Khas</p>
+                <p className="text-sm text-neutral-700 leading-relaxed">
+                  Tubuh berwarna keperakan dengan bentuk memanjang dan pola gelap pada bagian sisi tubuh.
+                </p>
+              </div>
+            </div>
+        
+            {/* KARTU SPESIES 2: TAWES */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-200 flex flex-col justify-between">
+              <div className="h-56 md:h-64 relative overflow-hidden bg-white p-4 flex items-center justify-center">
+                <img 
+                  src={tawesImg} 
+                  alt="Barbonymus gonionotus" 
+                  className="w-full h-full object-contain mix-blend-multiply" 
+                />
+                <span className="absolute top-4 right-4 z-10 bg-emerald-100 text-emerald-800 font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 border border-emerald-300">
+                  <Leaf size={12} /> Ikan Lokal
+                </span>
+              </div>
+              <div className="p-6 space-y-2">
+                <h3 className="text-xl font-bold text-[#008000]">Tawes</h3>
+                <p className="text-xs font-mono text-gray-400 uppercase tracking-widest">Barbonymus gonionotus</p>
+                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest pt-1">@ Ciri Khas</p>
+                <p className="text-sm text-neutral-700 leading-relaxed">
+                  Tubuh pipih dengan warna keperakan dan bagian punggung yang relatif tinggi.
+                </p>
+              </div>
+            </div>
+        
+            {/* KARTU SPESIES 3: BETOK */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-200 flex flex-col justify-between">
+              <div className="h-56 md:h-64 relative overflow-hidden bg-white p-4 flex items-center justify-center">
+                <img 
+                  src={betokImg} 
+                  alt="Anabas testudineus" 
+                  className="w-full h-full object-contain mix-blend-multiply" 
+                />
+                <span className="absolute top-4 right-4 z-10 bg-emerald-100 text-emerald-800 font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 border border-emerald-300">
+                  <Leaf size={12} /> Ikan Lokal
+                </span>
+              </div>
+              <div className="p-6 space-y-2">
+                <h3 className="text-xl font-bold text-[#008000]">Betok</h3>
+                <p className="text-xs font-mono text-gray-400 uppercase tracking-widest">Anabas testudineus</p>
+                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest pt-1">@ Ciri Khas</p>
+                <p className="text-sm text-neutral-700 leading-relaxed">
+                  Tubuh agak pipih dengan sisik kasar dan sirip punggung yang memiliki duri.
+                </p>
+              </div>
+            </div>
+        
+            {/* KARTU SPESIES 4: WADER PARI */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-200 flex flex-col justify-between">
+              <div className="h-56 md:h-64 relative overflow-hidden bg-white p-4 flex items-center justify-center">
+                <img 
+                  src={waderImg} 
+                  alt="Rasbora argyrotaenia" 
+                  className="w-full h-full object-contain mix-blend-multiply" 
+                />
+                <span className="absolute top-4 right-4 z-10 bg-emerald-100 text-emerald-800 font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 border border-emerald-300">
+                  <Leaf size={12} /> Ikan Lokal
+                </span>
+              </div>
+              <div className="p-6 space-y-2">
+                <h3 className="text-xl font-bold text-[#008000]">Wader Pari</h3>
+                <p className="text-xs font-mono text-gray-400 uppercase tracking-widest">Rasbora argyrotaenia</p>
+                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest pt-1">@ Ciri Khas</p>
+                <p className="text-sm text-neutral-700 leading-relaxed">
+                  Berukuran kecil, bertubuh ramping, dan memiliki warna keperakan.
+                </p>
+              </div>
+            </div>
+        
+            {/* KARTU SPESIES 5: KETING */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-200 flex flex-col justify-between">
+              <div className="h-56 md:h-64 relative overflow-hidden bg-white p-4 flex items-center justify-center">
+                <img 
+                  src={ketingImg} 
+                  alt="Mystus sp." 
+                  className="w-full h-full object-contain mix-blend-multiply" 
+                />
+                <span className="absolute top-4 right-4 z-10 bg-neutral-100 text-neutral-700 font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 border border-neutral-300 shadow-sm">
+                  🔍 Identifikasi Sp.
+                </span>
+              </div>
+              <div className="p-6 space-y-2">
+                <h3 className="text-xl font-bold text-[#008000]">Keting</h3>
+                <p className="text-xs font-mono text-gray-400 uppercase tracking-widest">Mystus sp.</p>
+                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest pt-1">@ Ciri Khas</p>
+                <p className="text-sm text-neutral-700 leading-relaxed">
+                  Tubuh tidak bersisik dan memiliki beberapa sungut di sekitar mulut.
+                </p>
+              </div>
+            </div>
+        
+            {/* KARTU SPESIES 6: SILI */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-200 flex flex-col justify-between">
+              <div className="h-56 md:h-64 relative overflow-hidden bg-white p-4 flex items-center justify-center">
+                <img 
+                  src={siliImg} 
+                  alt="Macrognathus sp." 
+                  className="w-full h-full object-contain mix-blend-multiply" 
+                />
+                <span className="absolute top-4 right-4 z-10 bg-neutral-100 text-neutral-700 font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 border border-neutral-300 shadow-sm">
+                  🔍 Identifikasi Sp.
+                </span>
+              </div>
+              <div className="p-6 space-y-2">
+                <h3 className="text-xl font-bold text-[#008000]">Sili</h3>
+                <p className="text-xs font-mono text-gray-400 uppercase tracking-widest">Macrognathus sp.</p>
+                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest pt-1">@ Ciri Khas</p>
+                <p className="text-sm text-neutral-700 leading-relaxed">
+                  Tubuh panjang menyerupai belut dengan moncong yang memanjang.
+                </p>
+              </div>
+            </div>
+        
+          </div>
+        </section>
       
-
-
         {/* ─── SUB JUDUL 3: IKAN LOKAL YANG MASIH BERTAHAN HIDUP ─── */}
+        <section className="space-y-6">
+          {/* Header Subjudul 3 */}
+          <div className="border-b-2 border-[#008000]/20 pb-2">
+            <h2 className="text-2xl font-bold text-[#008000] flex items-center gap-2">
+              <Leaf size={24} /> 3. Ikan Lokal Yang Masih Bertahan Hidup Berdampingan
+            </h2>
+            <p className="text-xs text-neutral-600 mt-1 leading-relaxed">
+              Tidak semua ikan lokal merespons keberadaan ikan sapu-sapu dengan cara yang sama. Beberapa spesies memiliki kemampuan adaptasi, toleransi lingkungan, atau strategi bertahan hidup tertentu yang memungkinkan mereka tetap ditemukan di perairan yang telah mengalami perubahan dan tekanan ekologis.
+            </p>
+          </div>
+        
+          {/* Kartu Spesies (Grid 3 Kolom) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* KARTU 1: GABUS */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-200 flex flex-col justify-between">
+              <div className="h-48 md:h-52 relative overflow-hidden bg-white p-4 flex items-center justify-center">
+                <img 
+                  src={gabusImg} 
+                  alt="Channa striata" 
+                  className="w-full h-full object-contain mix-blend-multiply" 
+                />
+                <span className="absolute top-3 right-3 z-10 bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-300">
+                  Air-Breathing
+                </span>
+              </div>
+              <div className="p-5 space-y-2">
+                <h3 className="text-base font-bold text-[#008000]">
+                  Gabus — <span className="italic">Channa striata</span>
+                </h3>
+                <p className="text-[10px] font-mono text-gray-400 uppercase tracking-widest flex items-center gap-1">
+                  ✓ Tahan Oksigen Rendah
+                </p>
+                <p className="text-xs text-neutral-700 leading-relaxed">
+                  Tubuh memanjang dengan kepala besar dan pola warna cokelat kehitaman menyerupai lingkungan...
+                </p>
+              </div>
+            </div>
+        
+            {/* KARTU 2: LELE LOKAL */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-200 flex flex-col justify-between">
+              <div className="h-48 md:h-52 relative overflow-hidden bg-white p-4 flex items-center justify-center">
+                <img 
+                  src={leleImg} 
+                  alt="Clarias batrachus" 
+                  className="w-full h-full object-contain mix-blend-multiply" 
+                />
+                <span className="absolute top-3 right-3 z-10 bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-300">
+                  Adaptif
+                </span>
+              </div>
+              <div className="p-5 space-y-2">
+                <h3 className="text-base font-bold text-[#008000]">
+                  Lele Lokal — <span className="italic">Clarias batrachus</span>
+                </h3>
+                <p className="text-[10px] font-mono text-gray-400 uppercase tracking-widest flex items-center gap-1">
+                  ✓ Toleran Perubahan Habitat
+                </p>
+                <p className="text-xs text-neutral-700 leading-relaxed">
+                  Tubuh memanjang tanpa sisik, kulit licin, memiliki empat pasang sungut di sekitar mulut, serta siri...
+                </p>
+              </div>
+            </div>
+        
+            {/* KARTU 3: BAUNG */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-200 flex flex-col justify-between">
+              <div className="h-48 md:h-52 relative overflow-hidden bg-white p-4 flex items-center justify-center">
+                <img 
+                  src={baungImg} 
+                  alt="Hemibagrus nemurus" 
+                  className="w-full h-full object-contain mix-blend-multiply" 
+                />
+                <span className="absolute top-3 right-3 z-10 bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-300">
+                  Bottom Feeder
+                </span>
+              </div>
+              <div className="p-5 space-y-2">
+                <h3 className="text-base font-bold text-[#008000]">
+                  Baung — <span className="italic">Hemibagrus nemurus</span>
+                </h3>
+                <p className="text-[10px] font-mono text-gray-400 uppercase tracking-widest flex items-center gap-1">
+                  ✓ Fleksibel Mencari Pakan
+                </p>
+                <p className="text-xs text-neutral-700 leading-relaxed">
+                  Tubuh memanjang tanpa sisik dengan beberapa sungut di sekitar mulut yang membantu mendetek...
+                </p>
+              </div>
+            </div>
+          </div>
+        
+          {/* TABEL STRATEGI ADAPTASI UTAMA */}
+          <div className="bg-white rounded-2xl p-6 shadow-md border border-neutral-200 overflow-x-auto">
+            <h3 className="font-bold text-neutral-800 mb-4 text-base">Tabel Strategi Adaptasi Utama</h3>
+            <table className="w-full text-left text-xs md:text-sm border-collapse min-w-[500px]">
+              <thead>
+                <tr className="border-b-2 border-neutral-200 text-gray-400 font-semibold uppercase text-[10px] bg-amber-50/50">
+                  <th className="py-2 px-3">Karakteristik</th>
+                  <th className="py-2 px-3 text-[#008000]">Gabus</th>
+                  <th className="py-2 px-3 text-[#008000]">Lele Lokal</th>
+                  <th className="py-2 px-3 text-[#008000]">Baung</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-neutral-100 text-neutral-700 font-medium">
+                <tr>
+                  <td className="py-3 px-3 font-bold">Ciri Tubuh</td>
+                  <td className="py-3 px-3">Kepala besar, pola kamuflase</td>
+                  <td className="py-3 px-3">Tanpa sisik, 4 pasang sungut</td>
+                  <td className="py-3 px-3">Tanpa sisik, sungut sensorik</td>
+                </tr>
+                <tr>
+                  <td className="py-3 px-3 font-bold">Strategi Utama</td>
+                  <td className="py-3 px-3">Pernapasan udara tambahan</td>
+                  <td className="py-3 px-3">Adaptasi habitat luas</td>
+                  <td className="py-3 px-3">Pemanfaatan dasar perairan</td>
+                </tr>
+                <tr>
+                  <td className="py-3 px-3 font-bold">Toleransi O2 Rendah</td>
+                  <td className="py-3 px-3">Sangat Tinggi</td>
+                  <td className="py-3 px-3">Tinggi</td>
+                  <td className="py-3 px-3">Sedang</td>
+                </tr>
+                <tr>
+                  <td className="py-3 px-3 font-bold">Zona Hidup</td>
+                  <td className="py-3 px-3">Permukaan & Tengah</td>
+                  <td className="py-3 px-3">Dasar & Tengah</td>
+                  <td className="py-3 px-3">Dasar</td>
+                </tr>
+                {/* BARIS TINGKAT KETAHANAN DIUBAH MENJADI BARIS PALING BAWAH */}
+                <tr>
+                  <td className="py-3 px-3 font-bold">Tingkat Ketahanan</td>
+                  <td className="py-3 px-3">
+                    <span className="bg-emerald-100 text-emerald-700 font-bold px-2.5 py-1 rounded-full text-[10px] inline-block">
+                      Tinggi
+                    </span>
+                  </td>
+                  <td className="py-3 px-3">
+                    <span className="bg-emerald-100 text-emerald-700 font-bold px-2.5 py-1 rounded-full text-[10px] inline-block">
+                      Sedang
+                    </span>
+                  </td>
+                  <td className="py-3 px-3">
+                    <span className="bg-emerald-100 text-emerald-700 font-bold px-2.5 py-1 rounded-full text-[10px] inline-block">
+                      Sedang
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
         
 
 
