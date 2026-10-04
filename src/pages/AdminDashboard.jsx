@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { 
@@ -18,6 +18,19 @@ import {
   Loader2,
   ExternalLink
 } from "lucide-react";
+
+// Komponen penolong untuk menggeser peta saat koordinat selectedLocation berubah
+function RecenterMap({ lat, lng }) {
+  const map = useMap();
+  useEffect(() => {
+    if (lat && lng) {
+      map.setView([lat, lng], 16);
+    }
+  }, [lat, lng, map]);
+  return null;
+}
+
+import geojsonData from '../data/jakartaRiver.json';
 
 // Fix icon Leaflet agar marker muncul dengan benar
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
@@ -403,18 +416,43 @@ export default function AdminDashboard() {
               </button>
             </div>
 
-            {/* Container Peta Leaflet */}
+            {/* Container Peta Leaflet Admin Dashboard */}
             <div className="w-full h-80 rounded-xl overflow-hidden border border-slate-200 shadow-inner">
               <MapContainer 
                 center={[selectedLocation.lat, selectedLocation.lng]} 
                 zoom={16} 
                 scrollWheelZoom={true}
                 className="w-full h-full"
+                className="w-full h-full focus:outline-none [&_*]:focus:outline-none"
               >
+                {/* 1. Tile Layer dasar */}
                 <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+                  url="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
                 />
+            
+                {/* 2. Menampilkan Garis Sungai GeoJSON agar tampilan sama persis dengan halaman Report */}
+                {geojsonData && (
+                  <GeoJSON
+                    data={geojsonData}
+                    style={() => ({
+                      color: "#0284c7",
+                      weight: 4,
+                      opacity: 0.85,
+                    })}
+                    onEachFeature={(feature, layer) => {
+                      const riverName = feature.properties?.name || "Aliran Sungai";
+                      layer.bindTooltip(riverName, {
+                        permanent: false,
+                        direction: "center",
+                        className:
+                          "bg-white/90 text-sky-900 font-bold text-[10px] px-1.5 py-0.5 rounded border border-sky-300 shadow-sm",
+                      });
+                    }}
+                  />
+                )}
+            
+                {/* 3. Pointer Lokasi dari Pelapor (Read-Only: tanpa Event Handler klik/drag) */}
                 <Marker position={[selectedLocation.lat, selectedLocation.lng]}>
                   <Popup>
                     <div className="text-xs">
@@ -423,6 +461,9 @@ export default function AdminDashboard() {
                     </div>
                   </Popup>
                 </Marker>
+            
+                {/* 4. Komponen re-center otomatis jika admin memilih lokasi pelaporan berbeda */}
+                <RecenterMap lat={selectedLocation.lat} lng={selectedLocation.lng} />
               </MapContainer>
             </div>
 

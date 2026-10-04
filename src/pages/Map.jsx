@@ -7,6 +7,7 @@ import {
   Popup,
   Polyline,
   Tooltip,
+  GeoJSON,
 } from "react-leaflet";
 import {
   AlertTriangle,
@@ -21,10 +22,11 @@ import {
 } from "lucide-react";
 
 import { supabase } from "../supabaseClient";
+import geojsonData from '../data/jakartaRiver.json';
 
 export default function Map({ isLoggedIn = true }) {
   const jakartaCenter = [-6.204043, 106.812515];
-  const defaultZoom = 11;
+  const defaultZoom = 10.5;
 
   const [approvedReports, setApprovedReports] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -127,10 +129,11 @@ export default function Map({ isLoggedIn = true }) {
     const score = getScoreValue(report);
 
     // Patokan Kategori WQI (Skor 20 - 100)
-    if (score >= 80) return "#14cd14"; // Hijau (Sangat Baik / Normal: 80 - 100)
-    if (score >= 60) return "#ffd83d"; // Kuning (Tercemar Ringan: 60 - 79)
-    if (score >= 40) return "#FF8C00"; // Orange (Tercemar Sedang: 40 - 59)
-    return "#ea4235";                  // Merah (Tercemar Berat / Buruk: < 40)
+    if (score >= 91) return "#82d9f8"; // Biru (Sangat Baik / Normal: 91 - 100)
+    if (score >= 71) return "#14cd14"; // Hijau (Sangat Baik / Normal: 71 - 90)
+    if (score >= 51) return "#ffd83d"; // Kuning (Tercemar Ringan: 51 - 70)
+    if (score >= 26) return "#FF8C00"; // Orange (Tercemar Sedang: 26 - 50)
+    return "#ea4235";                  // Merah (Tercemar Berat / Buruk: < 25)
   };
 
   // ─── HELPER TEKS INDIKATOR KETERANGAN ───
@@ -138,9 +141,10 @@ export default function Map({ isLoggedIn = true }) {
     if (!report) return "Tanpa Data";
 
     const score = getScoreValue(report);
-    if (score >= 80) return `Sangat Baik / Normal (WQI: ${score})`;
-    if (score >= 60) return `Tercemar Ringan (WQI: ${score})`;
-    if (score >= 40) return `Tercemar Sedang (WQI: ${score})`;
+    if (score >= 91) return `Sangat Baik (WQI: ${score})`;
+    if (score >= 71) return `Normal (WQI: ${score})`;
+    if (score >= 51) return `Tercemar Ringan (WQI: ${score})`;
+    if (score >= 26) return `Tercemar Sedang (WQI: ${score})`;
     return `Tercemar Berat (WQI: ${score})`;
   };
 
@@ -159,14 +163,14 @@ const getDOValue = (report) => {
   if (eco && typeof eco === "object") {
     // 1. Cek kunci utama dari Supabase (snake_case)
     if (eco.sub_index_do !== undefined && eco.sub_index_do !== null) {
-      return `${eco.sub_index_do} mg/L (WQI)`;
+      return `${eco.sub_index_do} / 100 point`;
     }
     // 2. Fallback format alternatif
     if (eco.subIndexDO !== undefined && eco.subIndexDO !== null) {
-      return `${eco.subIndexDO} mg/L (WQI)`;
+      return `${eco.subIndexDO} / 100 point`;
     }
     if (eco.do_score !== undefined && eco.do_score !== null) {
-      return `${eco.do_score} mg/L`;
+      return `${eco.do_score} / 100 point`;
     }
   }
 
@@ -291,31 +295,37 @@ const getHeavyMetalValue = (report) => {
               center={jakartaCenter}
               zoom={defaultZoom}
               style={{ width: "100%", height: "100%" }}
-            >
+             >
               <TileLayer
-                attribution="&copy; OpenStreetMap contributors &copy; CARTO"
-                url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
+                attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+                url="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
               />
 
-              {rivers.map((river, idx) => (
-                <Polyline
-                  key={idx}
-                  positions={river.path}
-                  pathOptions={{
+              {geojsonData && (
+                <GeoJSON
+                  data={geojsonData}
+                  style={() => ({
                     color: "#0284c7",
-                    weight: river.weight,
+                    weight: 4,
                     opacity: 0.85,
+                  })}
+                  onEachFeature={(feature, layer) => {
+                    // Ambil properti nama sungai dari GeoJSON (sesuaikan nama propertinya, misal: 'NAMOBJ', 'name', atau 'river_name')
+                    const riverName =
+                      feature.properties?.NAMOBJ ||
+                      feature.properties?.name ||
+                      feature.properties?.river_name ||
+                      "Aliran Sungai";
+              
+                    layer.bindTooltip(riverName, {
+                      permanent: false, // Disarankan false agar tooltip tidak menumpuk memenuhi layar
+                      direction: "center",
+                      className:
+                        "bg-white/90 text-sky-900 font-bold text-[10px] px-1.5 py-0.5 rounded border border-sky-300 shadow-sm",
+                    });
                   }}
-                >
-                  <Tooltip
-                    permanent
-                    direction="center"
-                    className="bg-white/90 text-sky-900 font-bold text-[10px] px-1.5 py-0.5 rounded border border-sky-300 shadow-sm"
-                  >
-                    {river.name}
-                  </Tooltip>
-                </Polyline>
-              ))}
+                />
+              )}
 
               <TileLayer url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png" />
 
@@ -394,7 +404,7 @@ const getHeavyMetalValue = (report) => {
               {/* OKSIGEN TERLARUT (DO SUB-INDEX) */}
               <div className="w-full sm:w-1/3 max-w-[200px] bg-blue-50/70 p-2.5 rounded-xl border border-blue-200/60 text-center shadow-sm">
                 <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-blue-700 mb-0.5">
-                  <Droplets size={15} /> Sub-Indeks DO
+                  <Droplets size={15} /> Indeks DO
                 </div>
                 <p className="text-sm font-black text-blue-800">
                   {getDOValue(activeMetrics)}
@@ -404,7 +414,7 @@ const getHeavyMetalValue = (report) => {
               {/* LOGAM BERAT SUB-INDEX */}
               <div className="w-full sm:w-1/3 max-w-[200px] bg-red-50/70 p-2.5 rounded-xl border border-red-200/60 text-center shadow-sm">
                 <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-red-700 mb-0.5">
-                  <AlertTriangle size={15} /> Sub-Indeks Logam
+                  <AlertTriangle size={15} /> Indeks Logam
                 </div>
                 <p
                   className="text-xs font-extrabold text-red-800 truncate"
@@ -431,7 +441,7 @@ const getHeavyMetalValue = (report) => {
                   <p className="font-bold text-neutral-700 leading-none">
                     Merah
                   </p>
-                  <p className="text-[10px] text-neutral-400">Skor 20 - 39</p>
+                  <p className="text-[10px] text-neutral-400">Skor 0 - 25</p>
                 </div>
               </div>
 
@@ -441,7 +451,7 @@ const getHeavyMetalValue = (report) => {
                   <p className="font-bold text-neutral-700 leading-none">
                     Orange
                   </p>
-                  <p className="text-[10px] text-neutral-400">Skor 40 - 59</p>
+                  <p className="text-[10px] text-neutral-400">Skor 26 - 50</p>
                 </div>
               </div>
 
@@ -451,7 +461,7 @@ const getHeavyMetalValue = (report) => {
                   <p className="font-bold text-neutral-700 leading-none">
                     Kuning
                   </p>
-                  <p className="text-[10px] text-neutral-400">Skor 60 - 79</p>
+                  <p className="text-[10px] text-neutral-400">Skor 51 - 70</p>
                 </div>
               </div>
 
@@ -461,7 +471,17 @@ const getHeavyMetalValue = (report) => {
                   <p className="font-bold text-neutral-700 leading-none">
                     Hijau
                   </p>
-                  <p className="text-[10px] text-neutral-400">Skor 80 - 100</p>
+                  <p className="text-[10px] text-neutral-400">Skor 71 - 90</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5 p-1.5 bg-neutral-50 rounded-lg">
+                <span className="w-3.5 h-3.5 rounded-full bg-[#82d9f8]"></span>
+                <div>
+                  <p className="font-bold text-neutral-700 leading-none">
+                    Biru
+                  </p>
+                  <p className="text-[10px] text-neutral-400">Skor 91 - 100</p>
                 </div>
               </div>
             </div>

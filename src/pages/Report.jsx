@@ -1,5 +1,3 @@
-// Duplicate code 2
-
 import React, { useState, useRef, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { ECOLOGICAL_QUESTIONS } from "../data/journalData";
@@ -11,6 +9,7 @@ import {
   useMap,
   Polyline,
   Tooltip,
+  GeoJSON,
 } from "react-leaflet";
 import L from "leaflet";
 import {
@@ -28,6 +27,8 @@ import {
   Crosshair,
   ShieldAlert,
 } from "lucide-react";
+
+import geojsonData from '../data/jakartaRiver.json';
 
 // Data Koordinat Vektor Sungai Jakarta
 const rivers = [
@@ -683,16 +684,34 @@ const totalWQI = calculateTotalWQI();
             <div className="bg-[#D9D7C7] p-3 rounded-3xl border-4 border-[#C1BD9C] shadow-inner">
               <div className="w-full h-80 rounded-2xl overflow-hidden border border-gray-300 shadow-sm relative z-0">
                 <MapContainer center={markerPosition} zoom={11} scrollWheelZoom={true} className="w-full h-full">
-                  <TileLayer url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png" />
+                  <TileLayer attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ' url="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"/>
                   <MapRecenter lat={markerPosition[0]} lng={markerPosition[1]} />
                   <LocationPickerMarker position={markerPosition} setPosition={setMarkerPosition} />
-                  {rivers.map((river, idx) => (
-                    <Polyline key={idx} positions={river.path} pathOptions={{ color: "#0284c7", weight: 5, opacity: 0.85 }}>
-                      <Tooltip permanent direction="center" className="bg-white/90 text-sky-900 font-bold text-[10px] px-1.5 py-0.5 rounded border border-sky-300 shadow-sm">
-                        {river.name}
-                      </Tooltip>
-                    </Polyline>
-                  ))}
+                  {geojsonData && (
+                    <GeoJSON
+                      data={geojsonData}
+                      style={() => ({
+                        color: "#0284c7",
+                        weight: 4,
+                        opacity: 0.85,
+                      })}
+                      onEachFeature={(feature, layer) => {
+                        // Ambil properti nama sungai dari GeoJSON (sesuaikan nama propertinya, misal: 'NAMOBJ', 'name', atau 'river_name')
+                        const riverName =
+                          feature.properties?.NAMOBJ ||
+                          feature.properties?.name ||
+                          feature.properties?.river_name ||
+                          "Aliran Sungai";
+                  
+                        layer.bindTooltip(riverName, {
+                          permanent: false, // Disarankan false agar tooltip tidak menumpuk memenuhi layar
+                          direction: "center",
+                          className:
+                            "bg-white/90 text-sky-900 font-bold text-[10px] px-1.5 py-0.5 rounded border border-sky-300 shadow-sm",
+                        });
+                      }}
+                    />
+                  )}
                   <TileLayer url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png" />
                 </MapContainer>
               </div>
