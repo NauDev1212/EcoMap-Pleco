@@ -210,7 +210,7 @@ export default function Home() {
           <h1 className="text-3xl md:text-5xl font-black leading-tight tracking-tight drop-shadow-sm">
             Menjaga Sungai,
             <br />
-            Mengelola Invasif.
+            Mengelola Invasif
           </h1>
           <p className="text-sm md:text-base text-neutral-100/90 leading-relaxed font-medium">
             Sistem informasi pemetaan berkala dan edukasi ekologis limbah
@@ -247,7 +247,7 @@ export default function Home() {
               koloni jutaan ikan sapu-sapu yang mendominasi aliran sungai hilir
               kota. Tanpa predator alami, ikan invasif ini merusak struktur
               tanggul tanah lumpur, menyingkirkan fauna endemik lokal, serta
-              merugikan jaring-jaring nelayan tradisional.
+              merugikan jaring-jaring nelayan tradisional. Dengan WebSite ini kamu bisa berkontribusi dalam mencegah dan menjaga populasi di perairan kota.
             </p>
           </div>
           <div className="bg-[#FDF1CE] p-5 rounded-2xl border border-[#008000]/10 space-y-2 text-center md:text-left">
@@ -262,15 +262,23 @@ export default function Home() {
           </div>
         </div>
 
+        <div className="bg-white p-5 rounded-2xl border border-neutral-200 shadow-sm hover:border-[#008000]/40 transition-all group">
+              <div className="w-auto h-auto px-4 py-2 rounded-xl bg-emerald-50 text-[#008000] flex items-center justify-center font-bold mb-3 group-hover:scale-105 transition-transform">
+                Apa fungsi WebSite ini❓
+              </div>
+              <h4 className="font-bold text-sm text-emerald-800 mb-1">
+                Situs web ini merupakan media edukasi mengenai ikan sapu-sapu, pelacakan lokasinya, serta pelaporan kondisi sungai. Mari berperan aktif menjaga kestabilan ekosistem perairan melalui platform digital ini. Detail selengkapnya tersedia di bagian bawah halaman.
+              </h4>
+            </div>
+
         {/* Tiga Pilar Kontribusi Fitur Utama */}
         <div className="space-y-4">
           <div className="text-center">
             <h3 className="text-lg font-bold text-neutral-800">
-              Bagaimana Kamu Bisa Berkontribusi?
-            </h3>
+              Bagaimana Kamu Bisa Berkontribusi?             </h3>
             <p className="text-xs text-neutral-500">
-              Mari ambil peran aktif dalam menjaga kestabilan ekosistem perairan
-              kita melalui platform digital
+              Dengan WebSite ini mari kita ambil peran aktif dalam menjaga kestabilan ekosistem perairan
+              kita melalui platform digital.
             </p>
           </div>
 
