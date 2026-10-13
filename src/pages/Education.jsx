@@ -25,7 +25,7 @@ export default function Education() {
         {/* HEADER UTAMA */}
         <div className="text-center space-y-2">
           <h1 className="text-3xl md:text-5xl font-bold text-[#008000] tracking-wide uppercase pb-5">
-            Edukasi Terhadap Ikan Sapu-Sapu
+            Yuk kenali ikan sapu sapu dan dampaknya!
           </h1>
           <p className="text-sm md:text-base text-emerald-900/80 max-w-2xl mx-auto font-medium">
             Mengenal perbandingan spesies invasif ikan sapu-sapu, potensi pemanfaatan
@@ -33,12 +33,12 @@ export default function Education() {
             logis.
           </p>
         </div>
-
+        
         {/* ─── SUB JUDUL 1: PERBANDINGAN SPESIES ─── */}
         <section className="space-y-6">
           <div className="border-b-2 border-[#008000]/20 pb-2">
             <h2 className="text-2xl font-bold text-[#008000] flex items-center gap-2">
-              <Info size={24} /> 1. Perbandingan Spesies Ikan Sapu-Sapu
+              1. Perbandingan Spesies Ikan Sapu-Sapu
             </h2>
             <p className="text-xs text-neutral-600 mt-1">
               Kenali perbedaan morfologi spesies ikan sapu-sapu invasif yang
@@ -46,87 +46,87 @@ export default function Education() {
             </p>
           </div>
 
-          {/* KARTU SPESIES 1 */}
-          <div className="bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-200">
-            <div className="h-56 md:h-64 relative overflow-hidden bg-neutral-900">
-              <img
-                src={pardalisImg}
-                alt="Pterygoplichthys pardalis"
-                className="w-full h-full object-cover"
-              />
-              <span className="absolute top-4 right-4 bg-red-600 text-white font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
-                High Risk
-              </span>
+          {/* Kartu Spesies (Grid 3 Kolom) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* KARTU 1: PARDALIS */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-200 flex flex-col justify-between">
+              <div className="h-48 md:h-52 relative overflow-hidden bg-white p-4 flex items-center justify-center">
+                <img 
+                  src={pardalisImg} 
+                  alt="Pterygoplichthys pardalis" 
+                  className="w-full h-full object-contain mix-blend-multiply" 
+                />
+                <span className="absolute top-4 right-4 bg-red-500 text-white font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
+                Resiko Invasif Tinggi
+                </span>
+              </div>
+              <div className="p-5 space-y-2">
+                <h3 className="text-xl font-bold text-[#008000]">
+                  <span className="italic">Pterygoplichthys 
+                    pardalis</span>
+                </h3>
+                <p className="text-[10px] font-mono text-gray-400 uppercase tracking-widest flex items-center gap-1">
+                   Spesies di kategori ini mendominasi habitat secara masif. Keberadaannya merusak ekosistem lokal secara instan dan memerlukan perhatian darurat (penanganan segera).
+                </p>
+                <p className="text-xs text-neutral-700 leading-relaxed">
+                  Dicirikan oleh pola bintik-bintik gelap yang menyerupai macan tutul dengan latar belakang tubuh yang lebih terang. Sangat adaptif dan mendominasi sebagian besar ekosistem air tawar di Indonesia.
+                </p>
+              </div>
             </div>
-            <div className="p-6 space-y-2">
-              <h3 className="text-xl font-bold text-[#008000] italic">
-                Pterygoplichthys pardalis
-              </h3>
-              <p className="text-xs font-mono text-gray-400 uppercase tracking-widest">
-                Paling Sering Ditemui
-              </p>
-              <p className="text-sm text-neutral-700 leading-relaxed">
-                Dicirikan oleh pola bintik-bintik gelap yang menyerupai macan
-                tutul dengan latar belakang tubuh yang lebih terang. Sangat
-                adaptif dan mendominasi sebagian besar ekosistem air tawar di
-                Indonesia.
-              </p>
+        
+            {/* KARTU 2: DISJUNCTIVUS */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-200 flex flex-col justify-between">
+              <div className="h-48 md:h-52 relative overflow-hidden bg-white p-4 flex items-center justify-center">
+                <img 
+                  src={disjunctivusImg} 
+                  alt="Pterygoplichthys disjunctivus" 
+                  className="w-full h-full object-contain mix-blend-multiply" 
+                />
+                <span className="absolute top-4 right-4 bg-orange-500 text-white font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
+                Resiko Invasif Menengah
+                </span>
+              </div>
+              <div className="p-5 space-y-2">
+                <h3 className="text-xl font-bold text-[#008000]">
+                  <span className="italic">Pterygoplichthys 
+                    disjunctivus</span>
+                </h3>
+                <p className="text-[10px] font-mono text-gray-400 uppercase tracking-widest flex items-center gap-1">
+                  Spesies ini menjadi pesaing agresif bagi ikan lokal dalam memperebutkan pakan dan ruang, serta berpotensi mengubah kondisi fisik kualitas air di habitatnya.
+                </p>
+                <p className="text-xs text-neutral-700 leading-relaxed">
+                  Seringkali keliru diidentifikasi sebagai P. pardalis. Spesies ini memiliki karakteristik unik berupa pola labirin (garis cacing berliku-liku) yang menyatu di area perut, bukan bintik-bintik terpisah.
+                </p>
+              </div>
             </div>
-          </div>
-
-          {/* KARTU SPESIES 2 */}
-          <div className="bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-200">
-            <div className="h-56 md:h-64 relative overflow-hidden bg-neutral-900">
-              <img
-                src={disjunctivusImg}
-                alt="Pterygoplichthys disjunctivus"
-                className="w-full h-full object-cover"
-              />
-              <span className="absolute top-4 right-4 bg-orange-500 text-white font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
-                Mod-High Risk
-              </span>
-            </div>
-            <div className="p-6 space-y-2">
-              <h3 className="text-xl font-bold text-[#008000] italic">
-                Pterygoplichthys disjunctivus
-              </h3>
-              <p className="text-xs font-mono text-gray-400 uppercase tracking-widest">
-                Sering Dilaporkan
-              </p>
-              <p className="text-sm text-neutral-700 leading-relaxed">
-                Seringkali keliru diidentifikasi sebagai <i>P. pardalis</i>.
-                Spesies ini memiliki karakteristik unik berupa pola labirin
-                (garis cacing berliku-liku) yang menyatu di area perut, bukan
-                bintik-bintik terpisah.
-              </p>
-            </div>
-          </div>
-
-          {/* KARTU SPESIES 3 */}
-          <div className="bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-200">
-            <div className="h-56 md:h-64 relative overflow-hidden bg-neutral-900">
-              <img
-                src={plecostomusImg}
-                alt="Hypostomus plecostomus"
-                className="w-full h-full object-cover"
-              />
-              <span className="absolute top-4 right-4 bg-amber-500 text-white font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
-                Lower Risk
-              </span>
-            </div>
-            <div className="p-6 space-y-2">
-              <h3 className="text-xl font-bold text-[#008000] italic">
-                Hypostomus plecostomus
-              </h3>
-              <p className="text-xs font-mono text-gray-400 uppercase tracking-widest">
-                Sering Terkecoh
-              </p>
-              <p className="text-sm text-neutral-700 leading-relaxed">
-                Merupakan jenis "Original Pleco" asli dari perdagangan ikan
+        
+            {/* KARTU 3: PLECOSTOMUS */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-200 flex flex-col justify-between">
+              <div className="h-48 md:h-52 relative overflow-hidden bg-white p-4 flex items-center justify-center">
+                <img 
+                  src={plecostomusImg} 
+                  alt="Hemibagrus nemurus" 
+                  className="w-full h-full object-contain mix-blend-multiply" 
+                />
+                <span className="absolute top-4 right-4 bg-yellow-500 text-white font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
+                Resiko Invasif Rendah
+                </span>
+              </div>
+              <div className="p-5 space-y-2">
+                <h3 className="text-xl font-bold text-[#008000]">
+                  <span className="italic">Hypostomus 
+                    plecostomus</span>
+                </h3>
+                <p className="text-[10px] font-mono text-gray-400 uppercase tracking-widest flex items-center gap-1">
+                  Spesies yang laju persebaran dan dampak kerusakannya relatif lebih lambat karena keterbatasan ukuran tubuh atau kemampuan adaptasi. 
+                </p>
+                <p className="text-xs text-neutral-700 leading-relaxed">
+                  Merupakan jenis "Original Pleco" asli dari perdagangan ikan
                 hias. Umumnya berukuran lebih kecil dengan jumlah jari-jari
                 sirip punggung yang lebih sedikit (7-8 jari) dibandingkan dengan
                 genus Pterygoplichthys yang berukuran masif.
-              </p>
+                </p>
+              </div>
             </div>
           </div>
 
@@ -190,7 +190,7 @@ export default function Education() {
         <section className="space-y-6">
           <div className="border-b-2 border-[#008000]/20 pb-2">
             <h2 className="text-2xl font-bold text-[#008000] flex items-center gap-2">
-              <Droplet size={24} /> 2. Ikan Lokal Yang Terancam Punah
+              2. Ikan Lokal Yang Terancam Punah
             </h2>
             <p className="text-xs text-neutral-600 mt-1">
               Kenali berbagai spesies ikan lokal yang mengalami tekanan populasi akibat kehadiran ikan invasif.
@@ -229,14 +229,9 @@ export default function Education() {
                   alt="Osteochilus vittatus" 
                   className="w-full h-full object-contain mix-blend-multiply" 
                 />
-                <span className="absolute top-4 right-4 z-10 bg-emerald-100 text-emerald-800 font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 border border-emerald-300">
-                  <Leaf size={12} /> Ikan Lokal
-                </span>
               </div>
               <div className="p-6 space-y-2">
-                <h3 className="text-xl font-bold text-[#008000]">Nilem</h3>
-                <p className="text-xs font-mono text-gray-400 uppercase tracking-widest">Osteochilus vittatus</p>
-                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest pt-1">@ Ciri Khas</p>
+                <h3 className="text-base font-bold text-[#008000]">Nilem — <span className="italic">Osteochilus vittatus</span></h3>
                 <p className="text-sm text-neutral-700 leading-relaxed">
                   Tubuh berwarna keperakan dengan bentuk memanjang dan pola gelap pada bagian sisi tubuh.
                 </p>
@@ -251,14 +246,9 @@ export default function Education() {
                   alt="Barbonymus gonionotus" 
                   className="w-full h-full object-contain mix-blend-multiply" 
                 />
-                <span className="absolute top-4 right-4 z-10 bg-emerald-100 text-emerald-800 font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 border border-emerald-300">
-                  <Leaf size={12} /> Ikan Lokal
-                </span>
               </div>
               <div className="p-6 space-y-2">
-                <h3 className="text-xl font-bold text-[#008000]">Tawes</h3>
-                <p className="text-xs font-mono text-gray-400 uppercase tracking-widest">Barbonymus gonionotus</p>
-                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest pt-1">@ Ciri Khas</p>
+                <h3 className="text-base font-bold text-[#008000]">Tawes — <span className="italic">Barbonymus gonionotus</span></h3>
                 <p className="text-sm text-neutral-700 leading-relaxed">
                   Tubuh pipih dengan warna keperakan dan bagian punggung yang relatif tinggi.
                 </p>
@@ -273,14 +263,9 @@ export default function Education() {
                   alt="Anabas testudineus" 
                   className="w-full h-full object-contain mix-blend-multiply" 
                 />
-                <span className="absolute top-4 right-4 z-10 bg-emerald-100 text-emerald-800 font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 border border-emerald-300">
-                  <Leaf size={12} /> Ikan Lokal
-                </span>
               </div>
               <div className="p-6 space-y-2">
-                <h3 className="text-xl font-bold text-[#008000]">Betok</h3>
-                <p className="text-xs font-mono text-gray-400 uppercase tracking-widest">Anabas testudineus</p>
-                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest pt-1">@ Ciri Khas</p>
+                <h3 className="text-base font-bold text-[#008000]">Betok — <span className="italic">Anabas testudineus</span></h3>
                 <p className="text-sm text-neutral-700 leading-relaxed">
                   Tubuh agak pipih dengan sisik kasar dan sirip punggung yang memiliki duri.
                 </p>
@@ -295,14 +280,9 @@ export default function Education() {
                   alt="Rasbora argyrotaenia" 
                   className="w-full h-full object-contain mix-blend-multiply" 
                 />
-                <span className="absolute top-4 right-4 z-10 bg-emerald-100 text-emerald-800 font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 border border-emerald-300">
-                  <Leaf size={12} /> Ikan Lokal
-                </span>
               </div>
               <div className="p-6 space-y-2">
-                <h3 className="text-xl font-bold text-[#008000]">Wader Pari</h3>
-                <p className="text-xs font-mono text-gray-400 uppercase tracking-widest">Rasbora argyrotaenia</p>
-                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest pt-1">@ Ciri Khas</p>
+                <h3 className="text-base font-bold text-[#008000]">Wader Pari— <span className="italic">Rasbora argyrotaenia</span></h3>
                 <p className="text-sm text-neutral-700 leading-relaxed">
                   Berukuran kecil, bertubuh ramping, dan memiliki warna keperakan.
                 </p>
@@ -317,14 +297,9 @@ export default function Education() {
                   alt="Mystus sp." 
                   className="w-full h-full object-contain mix-blend-multiply" 
                 />
-                <span className="absolute top-4 right-4 z-10 bg-neutral-100 text-neutral-700 font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 border border-neutral-300 shadow-sm">
-                  🔍 Identifikasi Sp.
-                </span>
               </div>
               <div className="p-6 space-y-2">
-                <h3 className="text-xl font-bold text-[#008000]">Keting</h3>
-                <p className="text-xs font-mono text-gray-400 uppercase tracking-widest">Mystus sp.</p>
-                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest pt-1">@ Ciri Khas</p>
+                <h3 className="text-base font-bold text-[#008000]">Keting — <span className="italic">Mystus sp.</span></h3>
                 <p className="text-sm text-neutral-700 leading-relaxed">
                   Tubuh tidak bersisik dan memiliki beberapa sungut di sekitar mulut.
                 </p>
@@ -339,14 +314,9 @@ export default function Education() {
                   alt="Macrognathus sp." 
                   className="w-full h-full object-contain mix-blend-multiply" 
                 />
-                <span className="absolute top-4 right-4 z-10 bg-neutral-100 text-neutral-700 font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 border border-neutral-300 shadow-sm">
-                  🔍 Identifikasi Sp.
-                </span>
               </div>
               <div className="p-6 space-y-2">
-                <h3 className="text-xl font-bold text-[#008000]">Sili</h3>
-                <p className="text-xs font-mono text-gray-400 uppercase tracking-widest">Macrognathus sp.</p>
-                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest pt-1">@ Ciri Khas</p>
+                <h3 className="text-base font-bold text-[#008000]">Sili — <span className="italic">Macrognathus sp.</span></h3>
                 <p className="text-sm text-neutral-700 leading-relaxed">
                   Tubuh panjang menyerupai belut dengan moncong yang memanjang.
                 </p>
@@ -361,7 +331,7 @@ export default function Education() {
           {/* Header Subjudul 3 */}
           <div className="border-b-2 border-[#008000]/20 pb-2">
             <h2 className="text-2xl font-bold text-[#008000] flex items-center gap-2">
-              <Leaf size={24} /> 3. Ikan Lokal Yang Masih Bertahan Hidup Berdampingan
+              3. Adaptasi Ikan Lokal di Tengah Tekanan Populasi Invasif
             </h2>
             <p className="text-xs text-neutral-600 mt-1 leading-relaxed">
               Tidak semua ikan lokal merespons keberadaan ikan sapu-sapu dengan cara yang sama. Beberapa spesies memiliki kemampuan adaptasi, toleransi lingkungan, atau strategi bertahan hidup tertentu yang memungkinkan mereka tetap ditemukan di perairan yang telah mengalami perubahan dan tekanan ekologis.
@@ -378,9 +348,6 @@ export default function Education() {
                   alt="Channa striata" 
                   className="w-full h-full object-contain mix-blend-multiply" 
                 />
-                <span className="absolute top-3 right-3 z-10 bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-300">
-                  Air-Breathing
-                </span>
               </div>
               <div className="p-5 space-y-2">
                 <h3 className="text-base font-bold text-[#008000]">
@@ -390,7 +357,7 @@ export default function Education() {
                   ✓ Tahan Oksigen Rendah
                 </p>
                 <p className="text-xs text-neutral-700 leading-relaxed">
-                  Tubuh memanjang dengan kepala besar dan pola warna cokelat kehitaman menyerupai lingkungan...
+                  Memiliki organ pernapasan tambahan berupa labirin (divertikula), yang membuatnya bisa menyerap oksigen langsung dari udara.
                 </p>
               </div>
             </div>
@@ -403,19 +370,16 @@ export default function Education() {
                   alt="Clarias batrachus" 
                   className="w-full h-full object-contain mix-blend-multiply" 
                 />
-                <span className="absolute top-3 right-3 z-10 bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-300">
-                  Adaptif
-                </span>
               </div>
               <div className="p-5 space-y-2">
                 <h3 className="text-base font-bold text-[#008000]">
-                  Lele Lokal — <span className="italic">Clarias batrachus</span>
+                  Lele — <span className="italic">Clarias batrachus</span>
                 </h3>
                 <p className="text-[10px] font-mono text-gray-400 uppercase tracking-widest flex items-center gap-1">
                   ✓ Toleran Perubahan Habitat
                 </p>
                 <p className="text-xs text-neutral-700 leading-relaxed">
-                  Tubuh memanjang tanpa sisik, kulit licin, memiliki empat pasang sungut di sekitar mulut, serta siri...
+                  Sangat adaptif dan toleran terhadap perairan yang minim oksigen.
                 </p>
               </div>
             </div>
@@ -428,9 +392,6 @@ export default function Education() {
                   alt="Hemibagrus nemurus" 
                   className="w-full h-full object-contain mix-blend-multiply" 
                 />
-                <span className="absolute top-3 right-3 z-10 bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-300">
-                  Bottom Feeder
-                </span>
               </div>
               <div className="p-5 space-y-2">
                 <h3 className="text-base font-bold text-[#008000]">
@@ -440,7 +401,7 @@ export default function Education() {
                   ✓ Fleksibel Mencari Pakan
                 </p>
                 <p className="text-xs text-neutral-700 leading-relaxed">
-                  Tubuh memanjang tanpa sisik dengan beberapa sungut di sekitar mulut yang membantu mendetek...
+                  fleksibel berburu serangga air, udang, bahkan memangsa larva ikan sapu-sapu yang baru menetas.
                 </p>
               </div>
             </div>
@@ -454,7 +415,7 @@ export default function Education() {
                 <tr className="border-b-2 border-neutral-200 text-gray-400 font-semibold uppercase text-[10px] bg-amber-50/50">
                   <th className="py-2 px-3">Karakteristik</th>
                   <th className="py-2 px-3 text-[#008000]">Gabus</th>
-                  <th className="py-2 px-3 text-[#008000]">Lele Lokal</th>
+                  <th className="py-2 px-3 text-[#008000]">Lele</th>
                   <th className="py-2 px-3 text-[#008000]">Baung</th>
                 </tr>
               </thead>
@@ -513,11 +474,10 @@ export default function Education() {
         <section className="space-y-4">
           <div className="border-b-2 border-[#008000]/20 pb-2">
             <h2 className="text-2xl font-bold text-[#008000] flex items-center gap-2">
-              <Leaf size={24} /> 4. Pemanfaatan Non-Pangan
+              4. Pemanfaatan Non-Pangan
             </h2>
-            <p className="text-xs text-neutral-600 mt-1">
-              Karena isu kandungan logam berat di beberapa sungai Indonesia,
-              pemanfaatan organ ikan sapu-sapu dialihkan ke sektor non-pangan:
+            <p className="text-base text-neutral-600 mt-1">
+              Langkah ini diambil karena adanya isu kontaminasi logam berat pada ikan sapu-sapu di beberapa sungai Indonesia, sehingga organ dan tubuhnya tidak aman dikonsumsi manusia dan harus dialihkan ke sektor industri kreatif dan lingkungan.
             </p>
           </div>
 
@@ -601,7 +561,7 @@ export default function Education() {
         <section className="space-y-4">
           <div className="border-b-2 border-[#008000]/20 pb-2">
             <h2 className="text-2xl font-bold text-[#008000] flex items-center gap-2">
-              <ShieldAlert size={24} /> 5. Solusi Pembasmian Yang Logis & Manusiawi              
+              5. Solusi Pembasmian Yang Logis & Manusiawi              
             </h2>
             <p className="text-xs text-neutral-600 mt-1">
               Sebagai spesies asing invasif yang merusak habitat lokal, populasi

@@ -221,21 +221,23 @@ const calculateWeightedSubIndex = (category) => {
 const subIndexDO = calculateWeightedSubIndex("DO");
 const subIndexMetal = calculateWeightedSubIndex("LOGAM");
 
-// Hitung WQI Total gabungan tertimbang dari seluruh 10 indikator
+// Hitung WQI Total gabungan dari (Sub-Indeks DO + Sub-Indeks Logam Berat) / 2
 const calculateTotalWQI = () => {
-  let totalCiPi = 0;
-  let totalPi = 0;
+  // Jika belum ada indikator yang terisi sama sekali, kembalikan 0
+  const isAnyScoreFilled = Object.values(scores).some((val) => val !== "");
+  if (!isAnyScoreFilled) return 0;
 
-  ECOLOGICAL_QUESTIONS.forEach((q) => {
-    const val = Number(scores[q.id] || 0);
-    if (val > 0) {
-      totalCiPi += val * q.weight;
-      totalPi += q.weight;
-    }
-  });
+  // Mengambil hasil perhitungan sub-indeks DO dan Logam Berat yang sudah ada
+  const doScore = subIndexDO;
+  const metalScore = subIndexMetal;
 
-  if (totalPi === 0) return 0;
-  return Math.round(totalCiPi / totalPi);
+  // Jika salah satu kategori belum diisi sama sekali, jangan dibagi 2 dulu agar akurat
+  if (doScore === 0 || metalScore === 0) {
+    return doScore > 0 ? doScore : metalScore;
+  }
+
+  // Menjumlahkan DO dan Logam Berat lalu dibagi 2
+  return Math.round((doScore + metalScore) / 2);
 };
 
 const totalWQI = calculateTotalWQI();
@@ -667,7 +669,7 @@ const totalWQI = calculateTotalWQI();
           <div className="bg-white/70 p-5 rounded-xl border border-amber-200 shadow-sm space-y-4">
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b pb-2">
               <h2 className="text-base font-bold text-[#A52A2A] flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-red-600" /> 2. TITIK LOKASI PENGAMATAN PERSIS
+                <MapPin className="w-5 h-5 text-red-600" /> 2. TITIK LOKASI PENGAMATAN
               </h2>
 
               <button
