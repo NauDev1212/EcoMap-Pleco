@@ -167,17 +167,17 @@ export default function Education() {
                   <td className="py-3 font-bold">Risiko Invasif</td>
                   <td className="py-3">
                     <span className="bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-md text-[10px]">
-                      Kritis
-                    </span>
-                  </td>
-                  <td className="py-3">
-                    <span className="bg-orange-100 text-orange-700 font-bold px-2 py-0.5 rounded-md text-[10px]">
                       Tinggi
                     </span>
                   </td>
                   <td className="py-3">
-                    <span className="bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-md text-[10px]">
+                    <span className="bg-orange-100 text-orange-700 font-bold px-2 py-0.5 rounded-md text-[10px]">
                       Sedang
+                    </span>
+                  </td>
+                  <td className="py-3">
+                    <span className="bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-md text-[10px]">
+                      Rendah
                     </span>
                   </td>
                 </tr>
