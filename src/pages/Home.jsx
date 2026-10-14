@@ -7,6 +7,7 @@ import { supabase } from "../supabaseClient";
 
 // Import gambar
 import sungaiImg from "../asset/sungai sapu-sapu.jpg";
+//import sungaiImg from "../asset/sungai sapu-sapu1.jpg";
 
 export default function Home() {
   const navigate = useNavigate();
